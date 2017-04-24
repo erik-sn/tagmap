@@ -29,7 +29,7 @@ DEBUG = bool(os.environ.get('DEBUG', False))
 # this application from express.js or django
 SERVER_TYPE = os.environ.get('SERVER', 'NODE')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

@@ -15,6 +15,16 @@ class Tag(models.Model):
 
 
 class ScanEvent(models.Model):
-    file_name = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+    file_name = models.TextField(null=True)
+    database = models.ForeignKey('PiDatabase', null=True)
+
+
+class PiDatabase(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+    name = models.TextField(unique=True)
+    description = models.TextField(blank=True)
+    server = models.TextField()
+    data_source = models.TextField()

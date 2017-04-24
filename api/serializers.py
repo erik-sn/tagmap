@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Tag, ScanEvent
+from .models import Tag, ScanEvent, PiDatabase
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -15,3 +15,8 @@ class ScanSerializer(serializers.ModelSerializer):
         model = ScanEvent
         fields = ('file_name', 'created', 'modified')
 
+
+class PiDatabaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PiDatabase
+        fields = ('id', 'server', 'data_source', 'name', 'description')

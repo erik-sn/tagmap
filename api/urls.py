@@ -12,6 +12,7 @@ router = DefaultRouter()
 routes = {
     'tags': views.TagView,
     'scans': views.ScanEventView,
+    'databases': views.PiDatabaseView,
 }
 
 for route, viewset in routes.items():

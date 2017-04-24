@@ -7,8 +7,9 @@ from rest_framework.views import APIView
 from rest_framework import viewsets
 from dateutil.parser import parse
 
-from .models import ScanEvent, Tag
-from .serializers import ScanSerializer, TagSerializer
+from .models import ScanEvent, Tag, PiDatabase
+from .serializers import ScanSerializer, TagSerializer, PiDatabaseSerializer
+from .odbc import get_pi_conn
 
 
 @api_view(['GET'])
@@ -33,6 +34,35 @@ class ScanEventView(viewsets.ModelViewSet):
 
     queryset = ScanEvent.objects.all().order_by('-created')
     serializer_class = ScanSerializer
+
+
+class PiDatabaseView(viewsets.ModelViewSet):
+
+    queryset = PiDatabase.objects.all().order_by('-created')
+    serializer_class = PiDatabaseSerializer
+    scan_query = """
+    SELECT tag, exdesc FROM pipoint.pipoint2
+    WHERE exdesc <> '' AND  (pointsource='C' OR exdesc LIKE '%event%')
+    """
+
+    def create(self, request):
+        serializer = PiDatabaseSerializer(data=request.data)
+        if serializer.is_valid():
+            # test to see if connection can be made
+            with get_pi_conn(request.data['server'], request.data['data_source']):
+                serializer.save()
+        return Response(serializer.data, status=201)
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        """start database scan"""
+        database = PiDatabase.objects.get(id=pk)
+        with get_pi_conn(database.server, database.data_source) as conn:
+            cursor = conn.cursor()
+            cursor.execute(self.scan_query)
+            scan = ScanEvent.objects.create(database=database)
+            for row in cursor.fetchall():
+                print(row)
+        return Response('test', 200)
 
 
 class FileUploadView(APIView):
