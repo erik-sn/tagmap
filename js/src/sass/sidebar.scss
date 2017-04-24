@@ -1,0 +1,65 @@
+@import "./style";
+
+.sidebar__container {
+  min-width: 200px;
+  flex: 1 1 auto;
+  margin: 15px 5px;
+}
+
+.sidebar__tabs {
+  display: flex;
+  flex-direction: row;
+}
+
+.sidebar__tab {
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  background: $button;
+  color: $font-light;
+  cursor: pointer;
+  border: 1px solid $button;
+  transition: 0.15s ease-in-out;
+
+  &:hover {
+    background: $font-light;
+    color: $button;
+  }
+}
+
+/** Scan List & Items **/
+.scan_item__container {
+  cursor: pointer;
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  
+  &:hover {
+    background: $font-light;
+  }
+}
+
+.scan_item__type {
+  flex: 1 1 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.scan_item__info {
+  flex: 1 1 150px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.scan_item__date {
+  color: #999;
+  margin-left: 3px;
+  font-size: 0.9rem;
+}

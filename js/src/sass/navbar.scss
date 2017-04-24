@@ -1,0 +1,20 @@
+@import "./style";
+
+.navbar__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+  background: $primary;
+  color: $font-light;
+}
+
+.navbar__item {
+  padding: 5px 15px;
+  height: 40px;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}

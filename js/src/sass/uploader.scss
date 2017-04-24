@@ -1,8 +1,8 @@
 @import "./style";
 
+
 .uploader__prompt {
-  margin: 25px;
-  padding: 15px;
+  @include modal()
 }
 
 .uploader__dropzone {

@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 
-import { types } from '../actions/constants';
-
-
+import { API } from '../actions/constants';
+import { toggleFileUploader } from '../actions';
 
 class Uploader extends Component {
 
@@ -78,7 +78,7 @@ class Uploader extends Component {
     const source = cancelToken.source();
 
     this.setState({ uploading: true, invalid: undefined, count: undefined, httpRequest: source });
-    axios.put(`${types.API}/api/upload/${file.name}/`, data, { cancelToken: source.token })
+    axios.put(`${API}/api/upload/${file.name}/`, data, { cancelToken: source.token })
       .then((res) => {
         this.setState({
           error: '',
@@ -119,7 +119,7 @@ class Uploader extends Component {
 
     let messageContainer = <div className="uploader__label">{this.chooseMessage()}</div>;
     if (uploading) {
-      messageContainer = <img height="110px" src={`${types.API}/static/api/gears.gif`} alt="loading" />;
+      messageContainer = <img height="110px" src={`${API}/static/api/gears.gif`} alt="loading" />;
     }
 
     return (
@@ -134,7 +134,13 @@ class Uploader extends Component {
           {count ? `Created scan with ${count} tags, ${invalid.length} were invalid` : ''}
         </div>
         <div className="uploader__buttons">
-          {uploadedFile && !uploading ? <button className="uploader__button" onClick={this.handleSubmit}>Submit</button> : undefined}
+          {uploadedFile && !uploading ?
+            <button
+              className="uploader__button"
+              onClick={this.handleSubmit}
+            >
+              Submit
+            </button> : undefined}
           {!uploading ? 
             <div className="inputWrapper uploader__button">
               Choose File
@@ -147,11 +153,24 @@ class Uploader extends Component {
               />
             </div>
             : undefined}
-          <button className="uploader__button" onClick={this.handleCancel}>Cancel</button>
+          {uploadedFile ? 
+            <button
+              className="uploader__button"
+              onClick={this.handleCancel}
+            >
+              Cancel
+            </button>
+            : undefined}
+          <button
+            className="uploader__button"
+            onClick={this.props.toggleFileUploader}
+          >
+            Close
+          </button>
         </div>
       </div>
     );
   }
 }
 
-export default Uploader;
+export default connect(null, { toggleFileUploader })(Uploader);

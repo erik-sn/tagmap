@@ -1,4 +1,9 @@
 
-export const types = {
-  API: 'http://localhost:8000',
+export const API = 'http://localhost:8000';
+
+export const ACTIONS = {
+  FETCH_SCANS: 'FETCH_SCANS',
+  FETCH_TAGS: 'FETCH_TAGS',
+  TOGGLE_ODBC: 'TOGGLE_ODBC',
+  TOGGLE_FILE_UPLOADER: 'TOGGLE_FILE_UPLOADER',
 };

@@ -10,6 +10,17 @@ body, html {
   font-family: 'Roboto', sans-serif;
 }
 
+@mixin modal() {
+  z-index: 2;
+  position: absolute;
+  background: white;
+  width: 450px;
+  margin: 25px;
+  padding: 25px;
+  top: 20%;
+  left: calc(50% - 225px);
+  box-shadow: 1px 1px 2px 2px #999;
+}
 
 @mixin button() {
   background: $button;

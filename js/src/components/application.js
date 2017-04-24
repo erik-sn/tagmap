@@ -1,22 +1,38 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
 
-import Hello from './hello';
+import { fetchScans } from '../actions';
+import Navbar from './navbar';
+
+import Odbc from './odbc';
 import Uploader from './uploader';
+import Sidebar from './sidebar';
 
 class Application extends Component {
+
+  componentDidMount() {
+    this.props.fetchScans();
+  }
+
   render() {
+    const { showOdbc, showFileUploader } = this.props;
+    let mainClass = 'application-container';
+    if (showOdbc || showFileUploader) {
+      mainClass += ' application-modal';
+    }
     return (
-      <div className="application-container">
-        <Switch>
-          <Route exact path="/">
-            <div>Go to `/hello/**your name**/` to see react router working</div>
-          </Route>
-          <Route path="/upload" component={Uploader} />
-          <Route path="/hello/:name/" component={Hello} />
-        </Switch>
+      <div>
+        {showFileUploader ? <Uploader /> : undefined}
+        {showOdbc ? <Odbc /> : undefined}
+        <div className={mainClass}>
+          <Navbar />
+          <div className="main__container">
+            <div className="tag__container">
+              <h3>Tags</h3>
+            </div>
+            <Sidebar />
+          </div>
+        </div>
       </div>
     );
   }
@@ -24,11 +40,10 @@ class Application extends Component {
 
 function mapStateToProps(state) {
   return {
+    showOdbc: state.display.showOdbc,
+    showFileUploader: state.display.showFileUploader,
+    scans: state.data.scans,
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({}, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Application);
+export default connect(mapStateToProps, { fetchScans })(Application);

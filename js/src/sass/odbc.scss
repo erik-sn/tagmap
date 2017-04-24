@@ -1,0 +1,52 @@
+@import "./style";
+
+.odbc__container {
+  @include modal();
+  min-height: 300px;
+
+  h4 {
+    display: inline-block;
+    margin: 5px;
+  }
+
+  input {
+    width: 95%;
+    padding: 2px 8px;
+    font-size: 1.1rem;
+  }
+
+  span {
+    font-size: 0.75rem;
+    color: #999;
+    margin-left: 5px;
+    font-style: italic;
+  }
+
+  img {
+    text-align: center;
+  }
+}
+
+.odbc__button-container {
+  margin-top: 15px;
+}
+
+.odbc__error {
+  margin-left: 10px;
+  margin-top: 3px;
+  font-size: 0.8rem;
+  color: red;
+}
+
+.odbc__success-container {
+  text-align: center;
+  color: green;
+  font-size: 1.1rem;
+  margin-top: 5px;
+}
+
+.odbc__loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
