@@ -1,0 +1,34 @@
+$primary: #0069C0;
+$secondary: #cad6de;
+
+$font-light: #D3F6FE;
+$font-dark: #787878;
+$button: #0091D8;
+
+body, html {
+  margin: 0px;  
+  font-family: 'Roboto', sans-serif;
+}
+
+
+@mixin button() {
+  background: $button;
+  color: $font-light;
+  border-radius: 2px;
+  padding: 2px 25px;
+  font-weight: 600 !important;
+  box-shadow: 1px 1px 1px 0px $font-dark;
+  border: 1px solid $button;
+
+  transition: 0.15s ease-in-out;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &:hover {
+    background: $font-light;
+    color: $button;
+    border: 1px solid $button;
+  }
+}

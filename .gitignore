@@ -1,0 +1,24 @@
+;; environment variables
+.env
+
+;; other
+*.pyc
+
+
+;; virtual environments
+ven
+venv
+env
+
+;; IDE configurations
+.idea/
+.vscode
+
+;; code coverage reports
+.coverage
+cover
+coverage
+htmlcov
+
+;; database
+db.sqlite3
