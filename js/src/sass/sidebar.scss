@@ -24,9 +24,14 @@
   transition: 0.15s ease-in-out;
 
   &:hover {
-    background: $font-light;
+    background: lighten($font-light, 10%);
     color: $button;
   }
+}
+
+.sidebar__active {
+  background: $font-light;
+  color: $button;
 }
 
 /** Scan List & Items **/
@@ -40,6 +45,10 @@
   &:hover {
     background: $font-light;
   }
+}
+
+.scan_item__active {
+  background: darken($font-light, 10%);
 }
 
 .scan_item__type {

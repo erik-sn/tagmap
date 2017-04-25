@@ -3,13 +3,17 @@ import { connect } from 'react-redux';
 
 import { fetchTags } from '../actions';
 
-const ScanItem = ({ scan, fetchTags }) => {
-  const fetchScanTags = () => fetchTags(scan.id);
+const ScanItem = ({ scan, active, handleClick, fetchTags }) => {
+  const onClick = () => {
+    fetchTags(scan.id);
+    handleClick(scan);
+  }
+  const mainClass = `scan_item__container${active ? ' scan_item__active' : ''}`;
   return (
     <div
-      className="scan_item__container"
+      className={mainClass}
       role="button"
-      onClick={fetchScanTags}
+      onClick={onClick}
     >
       <div className="scan_item__type">
         {scan.file_name ? 'Excel' : 'ODBC'}
