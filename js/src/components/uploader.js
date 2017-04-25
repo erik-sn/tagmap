@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 
 import { API } from '../actions/constants';
-import { toggleFileUploader } from '../actions';
+import { fetchScans, toggleFileUploader } from '../actions';
 
 class Uploader extends Component {
 
@@ -85,7 +85,7 @@ class Uploader extends Component {
           invalid: res.data.invalid,
           count: res.data.count,
           uploading: false,
-        });
+        }, () => this.props.fetchScans());
       })
       .catch((err) => {
         if (axios.isCancel(err)) {
@@ -173,4 +173,7 @@ class Uploader extends Component {
   }
 }
 
-export default connect(null, { toggleFileUploader })(Uploader);
+export default connect(null, {
+  toggleFileUploader,
+  fetchScans,
+})(Uploader);

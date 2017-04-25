@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 import { API } from '../actions/constants';
-import { toggleScanOdbc } from '../actions';
+import { fetchScans, toggleScanOdbc } from '../actions';
 import Database from './database';
 
 class Odbc extends Component {
@@ -38,7 +38,6 @@ class Odbc extends Component {
         httpRequest: undefined,
       });
     }
-
   }
 
   handleScan() {
@@ -53,7 +52,7 @@ class Odbc extends Component {
       this.setState({
         ...this.defaultState,
         success: true,
-      });
+      }, () => this.props.fetchScans());
     })
     .catch((err) => {
       if (axios.isCancel(err)) {
@@ -126,5 +125,6 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
+  fetchScans,
   toggleScanOdbc,
 })(Odbc);
