@@ -1,8 +1,7 @@
 @import "./style";
 
 .sidebar__container {
-  min-width: 200px;
-  flex: 1 1 auto;
+  width: 350px;
   margin: 15px 5px;
 }
 
@@ -35,6 +34,17 @@
 }
 
 /** Scan List & Items **/
+.scan_list__items {
+  margin-bottom: 10px;
+}
+
+.scan_list__confirm {
+  text-align: center;
+  color: red;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
 .scan_item__container {
   cursor: pointer;
   padding: 5px 10px;
