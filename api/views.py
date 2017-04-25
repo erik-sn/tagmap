@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework import viewsets
+from rest_framework import generics
 from dateutil.parser import parse
 
 from .models import ScanEvent, Tag, PiDatabase
@@ -20,7 +21,7 @@ def index(request):
     return render(request, 'api/index.html')
 
 
-class TagView(viewsets.ModelViewSet):
+class TagView(viewsets.ReadOnlyModelViewSet):
 
     queryset = Tag.objects.all().order_by('-point_id')
     serializer_class = TagSerializer
@@ -40,13 +41,15 @@ class TagView(viewsets.ModelViewSet):
 
 class ScanEventView(viewsets.ModelViewSet):
 
-    queryset = ScanEvent.objects.order_by('-created')
+    queryset = ScanEvent.objects.order_by('-created').annotate(tags=Count('tag'))
     serializer_class = ScanSerializer
 
-    def list(self, request, *args, **kwargs):
-        scans = self.queryset.all().annotate(tags=Count('tag'))
-        serializer = ScanSerializer(scans, many=True)
-        return Response(serializer.data, 200)
+    def create(self, request, *args, **kwargs):
+        return Response(status=405)
+
+    def update(self, request, *args, **kwargs):
+        return Response(status=405)
+
 
 
 class PiDatabaseView(viewsets.ModelViewSet):
@@ -58,7 +61,7 @@ class PiDatabaseView(viewsets.ModelViewSet):
     WHERE exdesc <> '' AND  (pointsource='C' OR exdesc LIKE '%event%')
     """
 
-    def create(self, request):
+    def create(self, request, **kwargs):
         serializer = PiDatabaseSerializer(data=request.data)
         if serializer.is_valid():
             # test to see if connection can be made
