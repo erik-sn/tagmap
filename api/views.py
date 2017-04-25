@@ -1,3 +1,6 @@
+import pyodbc
+
+from django.db.models import Count
 from django.db.transaction import atomic
 from django.db.utils import OperationalError
 from django.shortcuts import render
@@ -29,11 +32,21 @@ class TagView(viewsets.ModelViewSet):
         tags = Tag.objects.filter(scan=scan)
         return Response(TagSerializer(tags, many=True).data, 200)
 
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        tags = Tag.objects.filter(scan__id=pk)
+        serializer = TagSerializer(tags, many=True)
+        return Response(serializer.data, 200)
+
 
 class ScanEventView(viewsets.ModelViewSet):
 
-    queryset = ScanEvent.objects.all().order_by('-created')
+    queryset = ScanEvent.objects.order_by('-created')
     serializer_class = ScanSerializer
+
+    def list(self, request, *args, **kwargs):
+        scans = self.queryset.all().annotate(tags=Count('tag'))
+        serializer = ScanSerializer(scans, many=True)
+        return Response(serializer.data, 200)
 
 
 class PiDatabaseView(viewsets.ModelViewSet):
@@ -49,9 +62,13 @@ class PiDatabaseView(viewsets.ModelViewSet):
         serializer = PiDatabaseSerializer(data=request.data)
         if serializer.is_valid():
             # test to see if connection can be made
-            with get_pi_conn(request.data['server'], request.data['data_source']):
-                serializer.save()
-        return Response(serializer.data, status=201)
+            try:
+                with get_pi_conn(request.data['server'], request.data['data_source']) as conn:
+                    serializer.save()
+                    return Response(serializer.data, status=201)
+            except pyodbc.Error:
+                return Response({'server': 'could not connect to the server through odbc'}, 400)
+        return Response(serializer.errors, 400)
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         """start database scan"""
@@ -59,9 +76,10 @@ class PiDatabaseView(viewsets.ModelViewSet):
         with get_pi_conn(database.server, database.data_source) as conn:
             cursor = conn.cursor()
             cursor.execute(self.scan_query)
+            tags = [tag for tag in cursor.fetchall()]
             scan = ScanEvent.objects.create(database=database)
-            for row in cursor.fetchall():
-                print(row)
+            for tag in tags:
+                print(tag)
         return Response('test', 200)
 
 

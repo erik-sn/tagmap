@@ -1,5 +1,6 @@
 @import "./style";
 
+/** Modal that creates ODBC databases **/
 .odbc__container {
   @include modal();
   min-height: 300px;
@@ -50,3 +51,67 @@
   justify-content: center;
   align-items: center;
 }
+
+/**
+Modal that uses created odbc
+databases to generate ScanEvents 
+*/
+
+.odbc_scan__container {
+  @include modal();
+  min-height: 300px;
+  max-height: 500px;
+
+  img {
+    padding: 30px 0px;
+    margin-left: calc(50% - 70px);
+  }
+}
+.odbc_scan__database-container {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.database__container {
+  cursor: pointer;
+  padding: 5px 10px;
+
+  &:hover {
+    background: $font-light;
+  }
+}
+
+.database__active {
+  background: $primary;
+}
+
+.database__name {
+  font-size: 1.3rem;
+}
+
+.database__server {
+  margin-left: 10px;
+}
+
+.database__server-label {
+  font-size: 0.8rem;
+  margin-right: 5px;
+}
+
+.database__server-value {
+  color: #999;
+}
+
+.database__data_source {
+  margin-left: 10px;
+}
+
+.database__data_source-label {
+  font-size: 0.8rem;
+  margin-right: 5px;
+}
+
+.database__data_source-value {
+  color: #999;
+}
+

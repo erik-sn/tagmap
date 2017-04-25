@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { API } from '../actions/constants';
-import { toggleOdbc, toggleFileUploader } from '../actions';
+import { toggleCreateOdbc, toggleScanOdbc,
+  toggleFileUploader } from '../actions';
 
 class Navbar extends Component {
 
@@ -11,14 +12,14 @@ class Navbar extends Component {
       <nav className="navbar__container" >
         <div
           className="navbar__item"
-          onClick={this.props.toggleOdbc}
+          onClick={this.props.toggleCreateOdbc}
           role="button"
         >
           add odbc
         </div>
         <div
           className="navbar__item"
-          onClick={this.props.toggleOdbc}
+          onClick={this.props.toggleScanOdbc}
           role="button"
         >
           scan odbc
@@ -40,4 +41,8 @@ class Navbar extends Component {
   }
 }
 
-export default connect(null, { toggleOdbc, toggleFileUploader })(Navbar);
+export default connect(null, {
+  toggleCreateOdbc,
+  toggleScanOdbc,
+  toggleFileUploader,
+})(Navbar);

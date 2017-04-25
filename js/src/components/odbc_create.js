@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 import { API } from '../actions/constants';
-import { toggleOdbc } from '../actions';
+import { toggleCreateOdbc } from '../actions';
 
 class Odbc extends Component {
 
@@ -96,7 +96,7 @@ class Odbc extends Component {
           </button>
           <button
             className="uploader__button"
-            onClick={this.props.toggleOdbc}
+            onClick={this.props.toggleCreateOdbc}
           >
             Close
           </button>
@@ -106,4 +106,4 @@ class Odbc extends Component {
   }
 }
 
-export default connect(null, { toggleOdbc })(Odbc);
+export default connect(null, { toggleCreateOdbc })(Odbc);

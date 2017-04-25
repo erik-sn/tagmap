@@ -16,13 +16,27 @@ export function fetchTags(scanId) {
     payload: request,
     type: ACTIONS.FETCH_TAGS,
   };
-
 }
 
-export function toggleOdbc() {
+export function fetchDatabases() {
+  const request = axios.get(`${API}/api/databases/`);
+  return {
+    payload: request,
+    type: ACTIONS.FETCH_DATABASES,
+  };
+}
+
+export function toggleCreateOdbc() {
   return {
     payload: null,
-    type: ACTIONS.TOGGLE_ODBC,
+    type: ACTIONS.TOGGLE_CREATE_ODBC,
+  };
+}
+
+export function toggleScanOdbc() {
+  return {
+    payload: null,
+    type: ACTIONS.TOGGLE_SCAN_ODBC,
   };
 }
 

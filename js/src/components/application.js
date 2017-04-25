@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { fetchScans } from '../actions';
+import { fetchDatabases, fetchScans } from '../actions';
 import Navbar from './navbar';
 
-import Odbc from './odbc';
+import OdbcCreate from './odbc_create';
+import OdbcScan from './odbc_scan';
 import Uploader from './uploader';
 import Sidebar from './sidebar';
 
@@ -12,18 +13,20 @@ class Application extends Component {
 
   componentDidMount() {
     this.props.fetchScans();
+    this.props.fetchDatabases();
   }
 
   render() {
-    const { showOdbc, showFileUploader } = this.props;
+    const { showCreateOdbc, showScanOdbc, showFileUploader } = this.props;
     let mainClass = 'application-container';
-    if (showOdbc || showFileUploader) {
+    if (showCreateOdbc || showScanOdbc || showFileUploader) {
       mainClass += ' application-modal';
     }
     return (
       <div>
         {showFileUploader ? <Uploader /> : undefined}
-        {showOdbc ? <Odbc /> : undefined}
+        {showCreateOdbc ? <OdbcCreate /> : undefined}
+        {showScanOdbc ? <OdbcScan /> : undefined}
         <div className={mainClass}>
           <Navbar />
           <div className="main__container">
@@ -40,10 +43,14 @@ class Application extends Component {
 
 function mapStateToProps(state) {
   return {
-    showOdbc: state.display.showOdbc,
+    showCreateOdbc: state.display.showCreateOdbc,
+    showScanOdbc: state.display.showScanOdbc,
     showFileUploader: state.display.showFileUploader,
     scans: state.data.scans,
   };
 }
 
-export default connect(mapStateToProps, { fetchScans })(Application);
+export default connect(mapStateToProps, {
+  fetchScans,
+  fetchDatabases,
+})(Application);

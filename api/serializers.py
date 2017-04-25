@@ -6,17 +6,22 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = ('point_id', 'name', 'object_type', 'change_date',
+        fields = ('id', 'point_id', 'name', 'object_type', 'change_date',
                   'creation_date', 'changer', 'creator', 'exdesc')
 
 
 class ScanSerializer(serializers.ModelSerializer):
+    tags = serializers.ReadOnlyField()
+
     class Meta:
         model = ScanEvent
-        fields = ('file_name', 'created', 'modified')
+        depth = 1
+        fields = ('id', 'file_name', 'database', 'created', 'modified', 'tags')
 
 
 class PiDatabaseSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = PiDatabase
-        fields = ('id', 'server', 'data_source', 'name', 'description')
+        fields = ('id', 'server', 'data_source', 'name', 'description',
+                  'created', 'modified')

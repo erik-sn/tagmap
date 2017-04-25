@@ -1,22 +1,34 @@
 import { ACTIONS } from '../actions/constants';
 
-export const initialState = {
-  showOdbc: false,
+
+const defaultModalStates = {
+  showCreateOdbc: false,
+  showScanOdbc: false,
   showFileUploader: false,
+};
+
+export const initialState = {
+  ...defaultModalStates,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case ACTIONS.TOGGLE_ODBC:
+    case ACTIONS.TOGGLE_CREATE_ODBC:
       return {
         ...state,
-        showOdbc: !state.showOdbc,
-        showFileUploader: false,
+        ...defaultModalStates,
+        showCreateOdbc: !state.showCreateOdbc,
+      };
+    case ACTIONS.TOGGLE_SCAN_ODBC:
+      return {
+        ...state,
+        ...defaultModalStates,
+        showScanOdbc: !state.showScanOdbc,
       };
     case ACTIONS.TOGGLE_FILE_UPLOADER:
       return {
         ...state,
-        showOdbc: false,
+        ...defaultModalStates,
         showFileUploader: !state.showFileUploader,
       };
     default:
