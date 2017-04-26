@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 import { API } from '../actions/constants';
-import { fetchScans, toggleScanOdbc } from '../actions';
+import { fetchDatabases, fetchScans, toggleScanOdbc } from '../actions';
 import Database from './database';
 
 class Odbc extends Component {
@@ -12,12 +12,14 @@ class Odbc extends Component {
     super(props);
     this.defaultState = {
       activeDatabase: undefined,
+      deleteError: false,
       errors: undefined,
       scanning: false,
       success: undefined,
       httpRequest: undefined,
     };
     this.state = this.defaultState;
+    this.handleDelete = this.handleDelete.bind(this);
     this.handleScan = this.handleScan.bind(this);
     this.cancelScan = this.cancelScan.bind(this);
     this.handleDatabaseClick = this.handleDatabaseClick.bind(this);
@@ -40,9 +42,23 @@ class Odbc extends Component {
     }
   }
 
+  handleDelete() {
+    const id = this.state.activeDatabase.id;
+    axios.delete(`${API}/api/databases/${id}/`)
+    .then((res) => {
+      this.setState({
+        activeDatabase: undefined,
+      }, () => this.props.fetchDatabases())
+    })
+    .catch(() => {
+      this.setState({
+        deleteError: true,
+      })
+    })
+  }
+
   handleScan() {
     const id = this.state.activeDatabase.id;
-    
     const cancelToken = axios.CancelToken;
     const source = cancelToken.source();
 
@@ -69,7 +85,7 @@ class Odbc extends Component {
   }
 
   render() {
-    const { errors, success, scanning, activeDatabase } = this.state;
+    const { deleteError, scanning, activeDatabase } = this.state;
     const { databases } = this.props;
     return (
       <div className="odbc_scan__container" >
@@ -77,6 +93,9 @@ class Odbc extends Component {
         {scanning
           ? <img height="150px" src={`${API}/static/api/gears.gif`} alt="loading" />
           : <div className="odbc_scan__database-container">
+            {databases.length === 0 ?
+              <h4>There are no PI Databases configured</h4>
+            : undefined}
             {databases.map(db => (
               <Database
                 key={db.id}
@@ -87,6 +106,9 @@ class Odbc extends Component {
               ))}
           </div>
         }
+        <div className="odbc_scan__error-container">
+          {deleteError ? 'There was an error deleting this database' : ''}
+        </div>
         <div className="odbc_scan__button-container">
           {scanning ?
             <button
@@ -102,6 +124,15 @@ class Odbc extends Component {
               onClick={this.handleScan}
             >
               Scan
+            </button>
+          : undefined}
+
+          {activeDatabase && !scanning ?
+            <button
+              className="uploader__button"
+              onClick={this.handleDelete}
+            >
+              Delete
             </button>
           : undefined}
           {!scanning ?
@@ -125,6 +156,7 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
+  fetchDatabases,
   fetchScans,
   toggleScanOdbc,
 })(Odbc);

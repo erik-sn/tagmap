@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 import { API } from '../actions/constants';
-import { toggleCreateOdbc } from '../actions';
+import { fetchDatabases, toggleCreateOdbc } from '../actions';
 
 class Odbc extends Component {
 
@@ -39,7 +39,7 @@ class Odbc extends Component {
       this.setState({
         ...this.defaultState,
         success: true,
-      })
+      }, () => this.props.fetchDatabases())
     })
     .catch((err) => {
       const keys = Object.keys(err.response.data);
@@ -106,4 +106,7 @@ class Odbc extends Component {
   }
 }
 
-export default connect(null, { toggleCreateOdbc })(Odbc);
+export default connect(null, {
+  fetchDatabases,
+  toggleCreateOdbc,
+})(Odbc);

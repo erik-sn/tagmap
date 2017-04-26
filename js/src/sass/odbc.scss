@@ -73,6 +73,13 @@ databases to generate ScanEvents
   margin-bottom: 10px;
 }
 
+.odbc_scan__error-container {
+  text-align: center;
+  color: red;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
 .database__container {
   cursor: pointer;
   padding: 5px 10px;

@@ -13,32 +13,47 @@ class ScanList extends Component {
     this.state = {
       activeScan: undefined,
       confirmDelete: false,
+      deleteError: false,
     };
     this.handleSetActiveScan = this.handleSetActiveScan.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleSetActiveScan(scan) {
-    this.setState({ activeScan: scan });
+    this.setState({
+      activeScan: scan,
+      confirmDelete: false,
+      deleteError: false,
+    });
   }
 
   handleDelete() {
     const { activeScan, confirmDelete } = this.state;
     if (!confirmDelete) {
-      this.setState({ confirmDelete: true });
+      this.setState({
+        confirmDelete: true,
+        deleteError: false,
+      });
     } else {
       axios.delete(`${API}/api/scans/${activeScan.id}/`)
       .then(() => {
         this.setState({
           activeScan: undefined,
           confirmDelete: false,
+          deleteError: false,
         }, () => this.props.fetchScans());
-      });
+      })
+      .catch(() => {
+        this.setState({
+          deleteError: true,
+          confirmDelete: false,
+        });
+      })
     }
   }
 
   render() {
-    const { activeScan, confirmDelete } = this.state;
+    const { activeScan, confirmDelete, deleteError } = this.state;
     const { scans } = this.props;
     return (
       <div className="scan_list__container" >
@@ -51,6 +66,9 @@ class ScanList extends Component {
               active={activeScan && activeScan.id === scan.id}
             />
           ))}
+        </div>
+        <div className="scan_list__error-container">
+          {deleteError ? 'There was an error deleting this scan event' : ''}
         </div>
         <div className="scan_list__buttons">
           {confirmDelete ?

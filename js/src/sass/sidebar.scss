@@ -35,10 +35,17 @@
 
 /** Scan List & Items **/
 .scan_list__items {
-  margin-bottom: 10px;
+  margin: 10px 0px;
 }
 
 .scan_list__confirm {
+  text-align: center;
+  color: red;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
+.scan_list__error-container {
   text-align: center;
   color: red;
   font-size: 0.85rem;
