@@ -17,6 +17,7 @@ class ScanList extends Component {
     };
     this.handleSetActiveScan = this.handleSetActiveScan.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleStopDeleteProcess = this.handleStopDeleteProcess.bind(this);
   }
 
   componentWillMount() {
@@ -33,6 +34,12 @@ class ScanList extends Component {
       confirmDelete: false,
       deleteError: false,
     }, () => this.props.fetchTags(scanId));
+  }
+
+  handleStopDeleteProcess() {
+    this.setState({ 
+      confirmDelete: false,
+    });
   }
 
   handleDelete() {
@@ -84,12 +91,20 @@ class ScanList extends Component {
               <div className="scan_list__confirm">
                 Are you sure you want to delete this scan?
               </div>
-              <button
-                className="uploader__button"
-                onClick={this.handleDelete}
-              >
-                Confirm
-              </button>
+              <div>
+                <button
+                  className="uploader__button"
+                  onClick={this.handleDelete}
+                >
+                  Confirm
+                </button>
+                <button
+                  className="uploader__button"
+                  onClick={this.handleStopDeleteProcess}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
             : undefined}
           {activeScanId && !confirmDelete ?
