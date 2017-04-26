@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import { fetchScans } from '../actions';
+import { fetchScans, fetchTags } from '../actions';
 import { API } from '../actions/constants';
 import ScanItem from './scan_item';
 
@@ -11,7 +11,7 @@ class ScanList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeScan: undefined,
+      activeScanId: undefined,
       confirmDelete: false,
       deleteError: false,
     };
@@ -19,26 +19,34 @@ class ScanList extends Component {
     this.handleDelete = this.handleDelete.bind(this);
   }
 
-  handleSetActiveScan(scan) {
+  componentWillMount() {
+    const lastSeenScanId = JSON.parse(localStorage.getItem('activeScan'));
+    if (lastSeenScanId) {
+      this.handleSetActiveScan(lastSeenScanId);
+    }
+  }
+
+  handleSetActiveScan(scanId) {
+    localStorage.setItem('activeScan', JSON.stringify(scanId));
     this.setState({
-      activeScan: scan,
+      activeScanId: scanId,
       confirmDelete: false,
       deleteError: false,
-    });
+    }, () => this.props.fetchTags(scanId));
   }
 
   handleDelete() {
-    const { activeScan, confirmDelete } = this.state;
+    const { activeScanId, confirmDelete } = this.state;
     if (!confirmDelete) {
       this.setState({
         confirmDelete: true,
         deleteError: false,
       });
     } else {
-      axios.delete(`${API}/api/scans/${activeScan.id}/`)
+      axios.delete(`${API}/api/scans/${activeScanId}/`)
       .then(() => {
         this.setState({
-          activeScan: undefined,
+          activeScanId: undefined,
           confirmDelete: false,
           deleteError: false,
         }, () => this.props.fetchScans());
@@ -53,7 +61,7 @@ class ScanList extends Component {
   }
 
   render() {
-    const { activeScan, confirmDelete, deleteError } = this.state;
+    const { activeScanId, confirmDelete, deleteError } = this.state;
     const { scans } = this.props;
     return (
       <div className="scan_list__container" >
@@ -63,7 +71,7 @@ class ScanList extends Component {
               key={scan.id}
               scan={scan}
               handleClick={this.handleSetActiveScan}
-              active={activeScan && activeScan.id === scan.id}
+              active={activeScanId && activeScanId === scan.id}
             />
           ))}
         </div>
@@ -84,7 +92,7 @@ class ScanList extends Component {
               </button>
             </div>
             : undefined}
-          {activeScan && !confirmDelete ?
+          {activeScanId && !confirmDelete ?
             <button
               className="uploader__button"
               onClick={this.handleDelete}
@@ -106,4 +114,5 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
   fetchScans,
+  fetchTags,
 })(ScanList);

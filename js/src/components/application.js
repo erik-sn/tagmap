@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 
 import { fetchDatabases, fetchScans } from '../actions';
 import Navbar from './navbar';
-
 import OdbcCreate from './odbc_create';
 import OdbcScan from './odbc_scan';
 import Uploader from './uploader';
 import Sidebar from './sidebar';
+import TagList from './taglist';
+
 
 class Application extends Component {
 
@@ -17,7 +18,7 @@ class Application extends Component {
   }
 
   render() {
-    const { showCreateOdbc, showScanOdbc, showFileUploader } = this.props;
+    const { showCreateOdbc, showScanOdbc, showFileUploader, error } = this.props;
     let mainClass = 'application-container';
     if (showCreateOdbc || showScanOdbc || showFileUploader) {
       mainClass += ' application-modal';
@@ -30,9 +31,7 @@ class Application extends Component {
         <div className={mainClass}>
           <Navbar />
           <div className="main__container">
-            <div className="tag__container">
-              <h3>Tags</h3>
-            </div>
+            <TagList />
             <Sidebar />
           </div>
         </div>
@@ -47,6 +46,7 @@ function mapStateToProps(state) {
     showScanOdbc: state.display.showScanOdbc,
     showFileUploader: state.display.showFileUploader,
     scans: state.data.scans,
+    error: state.data.error,
   };
 }
 

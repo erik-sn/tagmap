@@ -4,6 +4,7 @@ export const initialState = {
   databases: [],
   scans: [],
   tags: [],
+  error: undefined,
 };
 
 function parseDate(item, createkey, modifyKey) {
@@ -17,10 +18,17 @@ function parseDate(item, createkey, modifyKey) {
 }
 
 export default (state = initialState, action) => {
+  if (action.error) {
+    return {
+      ...state,
+      error: action.payload.message,
+    };
+  }
   switch (action.type) {
     case ACTIONS.FETCH_SCANS:
       return {
         ...state,
+        error: undefined,
         scans: action.payload.data.map(scan => (
           parseDate(scan, 'created', 'modified')),
         ),
@@ -28,6 +36,7 @@ export default (state = initialState, action) => {
     case ACTIONS.FETCH_DATABASES:
       return {
         ...state,
+        error: undefined,
         databases: action.payload.data.map(database => (
           parseDate(database, 'created', 'modified')),
         ),
@@ -35,6 +44,7 @@ export default (state = initialState, action) => {
     case ACTIONS.FETCH_TAGS:
       return {
         ...state,
+        error: undefined,
         tags: action.payload.data.map(tag => (
           parseDate(tag, 'creation_date', 'change_date')),
         ),

@@ -1,0 +1,62 @@
+@import "./style";
+
+.taglist__container {
+  max-width: 100%;
+  flex: 4 1 auto;
+  padding: 15px 10px 0px 10px;
+
+  @media(min-width: 900px) {
+    max-width: calc(100% - 385px);
+  }
+  
+  button {
+    @include button();
+    height: 30px;
+  }
+
+}
+
+.filter_table__filter-bar {
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+}
+
+.filter_table__filter-container {
+  height: 100%;
+  margin-right: 15px;
+  border-bottom: 1px solid #999;
+
+  input {
+    height: 25px;
+    padding-left: 10px;
+    font-size: 1.2rem;
+    border-radius: 2px;
+    outline: none;
+    border: none;
+  }
+}
+
+.filter_table__header-cell {
+  height: 40px;
+  font-size: 1.3rem;
+}
+
+.filter_table__body {
+  margin-top: 5px
+}
+
+.filter_table__row {
+  cursor: pointer;
+  padding: 2px;
+
+  transition: 0.1s ease-in-out;
+  
+  &:hover {
+    background: lighten(#999, 10%);
+  }
+}
+
+.filter_table__cell {
+  white-space: nowrap;
+}

@@ -1,13 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
-import { fetchTags } from '../actions';
-
-const ScanItem = ({ scan, active, handleClick, fetchTags }) => {
-  const onClick = () => {
-    fetchTags(scan.id);
-    handleClick(scan);
-  }
+const ScanItem = ({ scan, active, handleClick }) => {
+  const onClick = () => handleClick(scan.id);
   const mainClass = `scan_item__container${active ? ' scan_item__active' : ''}`;
   return (
     <div
@@ -30,5 +24,5 @@ const ScanItem = ({ scan, active, handleClick, fetchTags }) => {
   );
 }
 
-export default connect(null, { fetchTags })(ScanItem);
+export default ScanItem;
 

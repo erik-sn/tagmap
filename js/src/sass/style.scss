@@ -23,6 +23,7 @@ body, html {
 }
 
 @mixin button() {
+  cursor: pointer;
   background: $button;
   color: $font-light;
   border-radius: 2px;
