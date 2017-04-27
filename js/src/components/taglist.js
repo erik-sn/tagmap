@@ -15,6 +15,16 @@ const config = [
 ];
 
 
+const tagRegex = /'(.*?)'/g
+
+function parseEquationChildren(equation) {
+  let matches = [];
+  const output = [];
+  while (matches = tagRegex.exec(equation)) {
+    output.push(matches[1]);
+  }
+  return output;
+}
 
 class Taglist extends Component {
 
@@ -53,6 +63,16 @@ class Taglist extends Component {
     this.setState({ activeRow: undefined });
   }
 
+  generateTagTree(inputTag) {
+    const { tags } = this.props;
+    const updatedTag = Object.assign({}, inputTag);
+    updatedTag.children = parseEquationChildren(inputTag.exdesc)
+                          .map(childName => tags.find(tag => tag.name === childName))
+                          .filter(tag => tag)
+                          .map(child => this.generateTagTree(child));
+    return updatedTag;
+  }
+
   render() {
     const { activeRow } = this.state;
     const { tags, error } = this.props;
@@ -63,10 +83,12 @@ class Taglist extends Component {
         </div>
       );
     }
+
     if (activeRow) {
+      const tagWithTree = this.generateTagTree(activeRow, null);
       return (
         <div className="taglist__container">
-          <TagDetail tag={activeRow} reset={this.handleRemoveActiveRow} />
+          <TagDetail tag={tagWithTree} reset={this.handleRemoveActiveRow} />
         </div>
       );
     }

@@ -16,3 +16,45 @@
   padding: 10px;
   background: lighten(#999, 10%);
 }
+
+.tag_detail__tree {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  height: 500px;
+  width: 1000px;
+}
+
+.tree_item__container {
+  margin-left: 25px;
+}
+
+
+/** D3 formatting */
+
+#tree_display__container {
+  width: 1000px;
+  height: 500px;
+}
+
+.node circle {
+  fill: #7ba7cc;
+  stroke: #b44682;
+  stroke-width: 1px;
+}
+
+.node text { 
+  font-family: 'Roboto';
+  font-size: 0.85rem;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1px;
+}
+
+ul {
+  list-style-type: none;
+}
