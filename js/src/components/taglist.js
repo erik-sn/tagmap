@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import FilterTable from 'filter-table';
 
 import Error from './error';
+import TagDetail from './tag_detail';
 
 require('filter-table/dist/index.css');
 
@@ -24,6 +25,7 @@ class Taglist extends Component {
       activeRow: undefined,
     };
     this.handleRowClick = this.handleRowClick.bind(this);
+    this.handleRemoveActiveRow = this.handleRemoveActiveRow.bind(this);
   }
 
   componentWillMount() {
@@ -36,7 +38,7 @@ class Taglist extends Component {
   }
 
   getTableHeight() {
-    let tableHeight = window.innerHeight - 135;
+    let tableHeight = window.innerHeight - 170;
     if (tableHeight < 200) {
       tableHeight = 200;
     }
@@ -45,6 +47,10 @@ class Taglist extends Component {
 
   handleRowClick(rowData, key) {
     this.setState({ activeRow: rowData });
+  }
+
+  handleRemoveActiveRow() {
+    this.setState({ activeRow: undefined });
   }
 
   render() {
@@ -60,7 +66,7 @@ class Taglist extends Component {
     if (activeRow) {
       return (
         <div className="taglist__container">
-          {activeRow.name}
+          <TagDetail tag={activeRow} reset={this.handleRemoveActiveRow} />
         </div>
       );
     }
@@ -75,6 +81,7 @@ class Taglist extends Component {
           handleRowClick={this.handleRowClick}
           showFilter
           showCsv
+          showResults
         />
       </div>
     );

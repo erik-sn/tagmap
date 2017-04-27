@@ -1,0 +1,18 @@
+@import "./style";
+
+.tag_detail__container {
+  position: relative;
+}
+
+#tag_detail__back {
+  position: absolute;
+  top: 0px;
+  right: 25px;
+}
+
+.tag_detail__equation {
+  border: 1px solid #999;
+  border-radius: 3px;
+  padding: 10px;
+  background: lighten(#999, 10%);
+}
