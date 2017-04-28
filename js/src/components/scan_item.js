@@ -22,7 +22,7 @@ const ScanItem = ({ scan, active, handleClick }) => {
       </div>
     </div>
   );
-}
+};
 
 export default ScanItem;
 

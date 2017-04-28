@@ -48,13 +48,13 @@ class Odbc extends Component {
     .then((res) => {
       this.setState({
         activeDatabase: undefined,
-      }, () => this.props.fetchDatabases())
+      }, () => this.props.fetchDatabases());
     })
     .catch(() => {
       this.setState({
         deleteError: true,
-      })
-    })
+      });
+    });
   }
 
   handleScan() {
@@ -152,7 +152,7 @@ class Odbc extends Component {
 function mapStateToProps(state) {
   return {
     databases: state.data.databases,
-  }
+  };
 }
 
 export default connect(mapStateToProps, {

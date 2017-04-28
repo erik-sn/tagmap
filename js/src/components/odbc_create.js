@@ -39,7 +39,7 @@ class Odbc extends Component {
       this.setState({
         ...this.defaultState,
         success: true,
-      }, () => this.props.fetchDatabases())
+      }, () => this.props.fetchDatabases());
     })
     .catch((err) => {
       const keys = Object.keys(err.response.data);
@@ -49,7 +49,7 @@ class Odbc extends Component {
         submitting: false,
         success: false,
       });
-    })
+    });
   }
 
   render() {
@@ -59,7 +59,7 @@ class Odbc extends Component {
         <div className="odbc__container odbc__loading-container">
           <img height="150px" src={`${API}/static/api/gears.gif`} alt="loading" />
         </div>
-      )
+      );
     }
     return (
       <div className="odbc__container" >

@@ -8,14 +8,13 @@ import TagDetail from './tag_detail';
 require('filter-table/dist/index.css');
 
 
-
 const config = [
   { key: 'name', header: 'Name', width: '25%' },
   { key: 'exdesc', header: 'Equation', width: '75%' },
 ];
 
 
-const tagRegex = /'(.*?)'/g
+const tagRegex = /'(.*?)'/g;
 
 function parseEquationChildren(equation) {
   let matches = [];
@@ -94,7 +93,7 @@ class Taglist extends Component {
     }
 
     return (
-      <div className="taglist__container" >
+      <div className="taglist__container" id="taglist">
         <FilterTable
           tableData={tags}
           config={config}

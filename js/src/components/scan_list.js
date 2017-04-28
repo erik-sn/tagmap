@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 
-import { fetchScans, fetchTags } from '../actions';
+import { fetchScans, fetchTags, toggleCreateOdbc,
+  toggleScanOdbc, toggleFileUploader } from '../actions';
 import { API } from '../actions/constants';
 import ScanItem from './scan_item';
 
@@ -33,11 +35,14 @@ class ScanList extends Component {
       activeScanId: scanId,
       confirmDelete: false,
       deleteError: false,
-    }, () => this.props.fetchTags(scanId));
+    }, () => {
+      this.props.fetchTags(scanId);
+      this.props.history.push(`/${scanId}/`);
+    });
   }
 
   handleStopDeleteProcess() {
-    this.setState({ 
+    this.setState({
       confirmDelete: false,
     });
   }
@@ -63,7 +68,7 @@ class ScanList extends Component {
           deleteError: true,
           confirmDelete: false,
         });
-      })
+      });
     }
   }
 
@@ -130,4 +135,7 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   fetchScans,
   fetchTags,
-})(ScanList);
+  toggleCreateOdbc,
+  toggleScanOdbc,
+  toggleFileUploader,
+})(withRouter(ScanList));

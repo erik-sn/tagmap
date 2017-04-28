@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
 
 import { fetchDatabases, fetchScans } from '../actions';
 import Navbar from './navbar';
@@ -8,6 +9,7 @@ import OdbcScan from './odbc_scan';
 import Uploader from './uploader';
 import Sidebar from './sidebar';
 import TagList from './taglist';
+import TagDetail from './tag_detail';
 
 
 class Application extends Component {
@@ -31,7 +33,11 @@ class Application extends Component {
         <div className={mainClass}>
           <Navbar />
           <div className="main__container">
-            <TagList />
+            <Switch>
+              <Route exact path="/" component={TagList} />
+              <Route path="/:scanId" component={TagList} />
+              <Route path="/:scanId/:tagId" component={TagDetail} />
+            </Switch >
             <Sidebar />
           </div>
         </div>

@@ -3,8 +3,11 @@ import d3 from 'd3';
 
 export default function (svgDomNode, treeData) {
   // ************** Generate the tree diagram	 *****************
-  const margin = { top: 20, right: 120, bottom: 20, left: 250 };
-  const width = 960 - margin.right - margin.left;
+  const containerWidth = document.getElementById('tagdetail').innerWidth;
+  console.log(containerWidth);
+  const root = treeData[0];
+  const margin = { top: 20, right: 20, bottom: 20, left: root.name.length * 10 };
+  const width = containerWidth - margin.right - margin.left;
   const height = 500 - margin.top - margin.bottom;
 
   let i = 0;
@@ -12,15 +15,14 @@ export default function (svgDomNode, treeData) {
 
   d3.select(svgDomNode).selectAll('*').remove();
 
-  const tree = d3.layout.tree().size([height, width]);
+  const tree = d3.layout.tree().size([height, containerWidth]);
   const diagonal = d3.svg.diagonal().projection(d => [d.y, d.x]);
   const svg = d3.select(svgDomNode).append('svg')
     .attr('width', width + margin.right + margin.left)
     .attr('height', height + margin.top + margin.bottom)
     .append('g')
-    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+    .attr('transform', `translate(${margin.left},${margin.top})`);
 
-  const root = treeData[0];
   root.x0 = height / 2;
   root.y0 = 0;
 
@@ -37,41 +39,42 @@ export default function (svgDomNode, treeData) {
     nodes.forEach((d) => { d.y = d.depth * 180; });
 
     // Update the nodes…
-    let node = svg.selectAll('g.node')
-      .data(nodes, (d) => { return d.id || (d.id = ++i); });
+    const node = svg.selectAll('g.node')
+      .data(nodes, d => d.id || (d.id = ++i));
 
     // Enter any new nodes at the parent's previous position.
-    let nodeEnter = node.enter().append('g')
+    const nodeEnter = node.enter().append('g')
       .attr('class', 'node')
-      .attr('transform', (d) => { return 'translate(' + source.y0 + ',' + source.x0 + ')'; })
+      .attr('transform', d => `translate(${source.y0},${source.x0})`)
       .on('click', click);
 
     nodeEnter.append('circle')
-      .attr('r', 1e-6)
+      .attr('r', 1e-6);
 
     nodeEnter.append('text')
-      .attr('x', (d) => { return d.children || d._children ? -13 : 13; })
+      .attr('x', d => d.children || d._children ? -13 : 13)
       .attr('dy', '.35em')
-      .attr('text-anchor', (d) => { return d.children || d._children ? 'end' : 'start'; })
-      .text((d) => { return d.name; })
+      .attr('text-anchor', d => d.children || d._children ? 'end' : 'start')
+      .text(d => d.name)
       .style('fill-opacity', 1e-6);
 
     // Transition nodes to their new position.
-    let nodeUpdate = node.transition()
+    const nodeUpdate = node.transition()
       .duration(duration)
-      .attr('transform', (d) => { return 'translate(' + d.y + ',' + d.x + ')'; });
+      .attr('transform', d => `translate(${d.y},${d.x})`);
 
     nodeUpdate.select('circle')
       .attr('r', 10)
-      .style('fill', (d) => { return d._children ? 'lightsteelblue' : '#fff'; });
+      .style('fill', d => d._children ? '#0069C0' : '#fff')
+      .style('opacity', d => d._children ? '0.9' : '1');
 
     nodeUpdate.select('text')
       .style('fill-opacity', 1);
 
     // Transition exiting nodes to the parent's new position.
-    let nodeExit = node.exit().transition()
+    const nodeExit = node.exit().transition()
       .duration(duration)
-      .attr('transform', (d) => { return 'translate(' + source.y + ',' + source.x + ')'; })
+      .attr('transform', d => `translate(${source.y},${source.x})`)
       .remove();
 
     nodeExit.select('circle')
@@ -81,14 +84,14 @@ export default function (svgDomNode, treeData) {
       .style('fill-opacity', 1e-6);
 
     // Update the links…
-    let link = svg.selectAll('path.link')
-      .data(links, (d) => { return d.target.id; });
+    const link = svg.selectAll('path.link')
+      .data(links, d => d.target.id);
 
     // Enter any new links at the parent's previous position.
     link.enter().insert('path', 'g')
       .attr('class', 'link')
       .attr('d', (d) => {
-        let o = { x: source.x0, y: source.y0 };
+        const o = { x: source.x0, y: source.y0 };
         return diagonal({ source: o, target: o });
       });
 
@@ -101,7 +104,7 @@ export default function (svgDomNode, treeData) {
     link.exit().transition()
       .duration(duration)
       .attr('d', (d) => {
-        let o = { x: source.x, y: source.y };
+        const o = { x: source.x, y: source.y };
         return diagonal({ source: o, target: o });
       })
       .remove();

@@ -13,7 +13,7 @@ class TagDetail extends Component {
   render() {
     const { name, exdesc, children } = this.props.tag;
     return (
-      <div className="tag_detail__container" >
+      <div className="tag_detail__container" id="tagdetail" >
         <button id="tag_detail__back" onClick={this.props.reset}>Back</button>
         <h3>Name:</h3>
         <span className="tag_detail__name">{name}</span>

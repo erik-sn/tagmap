@@ -23,8 +23,15 @@ class TreeDisplay extends Component {
     const node = findDOMNode(this);
     const cleanedTagHierarchy = cleanTagHierarchy(this.props.tag, null);
     renderTree(node, [cleanedTagHierarchy]);
-  }
 
+    let resizeTimer;
+    window.onresize = (() => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        renderTree(node, [cleanedTagHierarchy]);
+      }, 250);
+    });
+  }
 
   render() {
     return (
