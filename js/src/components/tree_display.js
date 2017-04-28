@@ -28,6 +28,7 @@ class TreeDisplay extends Component {
     window.onresize = (() => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
+        console.log('render');
         renderTree(node, [cleanedTagHierarchy]);
       }, 250);
     });

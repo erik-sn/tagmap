@@ -1,13 +1,28 @@
 import d3 from 'd3';
 
 
+function getTreeDepth(treeData) {
+  let depth = 0;
+  if (treeData.children) {
+    treeData.children.forEach((d) => {
+      const tempDepth = getTreeDepth(d);
+      if (tempDepth > depth) {
+        depth = tempDepth;
+      }
+    });
+  }
+  return 1 + depth;
+}
+
 export default function (svgDomNode, treeData) {
+
+  const depth = getTreeDepth(treeData[0]);
+
+
   // ************** Generate the tree diagram	 *****************
-  const containerWidth = document.getElementById('tagdetail').innerWidth;
-  console.log(containerWidth);
   const root = treeData[0];
-  const margin = { top: 20, right: 20, bottom: 20, left: root.name.length * 10 };
-  const width = containerWidth - margin.right - margin.left;
+  const margin = { top: 20, right: 20, bottom: 20, left: root.name.length * 20 };
+  const width = (depth * 350) - margin.right - margin.left;
   const height = 500 - margin.top - margin.bottom;
 
   let i = 0;
@@ -15,7 +30,7 @@ export default function (svgDomNode, treeData) {
 
   d3.select(svgDomNode).selectAll('*').remove();
 
-  const tree = d3.layout.tree().size([height, containerWidth]);
+  const tree = d3.layout.tree().size([height, depth * 350]);
   const diagonal = d3.svg.diagonal().projection(d => [d.y, d.x]);
   const svg = d3.select(svgDomNode).append('svg')
     .attr('width', width + margin.right + margin.left)

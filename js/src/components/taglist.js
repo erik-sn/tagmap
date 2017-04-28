@@ -77,7 +77,7 @@ class Taglist extends Component {
     const { tags, error } = this.props;
     if (error) {
       return (
-        <div className="taglist__container" >
+        <div className="taglist__container" id="taglist" >
           <Error message={error} />
         </div>
       );
@@ -86,7 +86,7 @@ class Taglist extends Component {
     if (activeRow) {
       const tagWithTree = this.generateTagTree(activeRow, null);
       return (
-        <div className="taglist__container">
+        <div className="taglist__container" id="taglist">
           <TagDetail tag={tagWithTree} reset={this.handleRemoveActiveRow} />
         </div>
       );
