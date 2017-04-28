@@ -57,9 +57,13 @@ class PiDatabaseView(viewsets.ModelViewSet):
     queryset = PiDatabase.objects.all().order_by('-created')
     serializer_class = PiDatabaseSerializer
     scan_query = """
-    SELECT tag, exdesc FROM pipoint.pipoint2
+    SELECT pointid, tag, changedate, changer, creationdate, creator, exdesc FROM pipoint.pipoint2
     WHERE exdesc <> '' AND  (pointsource='C' OR exdesc LIKE '%event%')
     """
+    
+    @atomic
+    def save_tags(self, tags):
+        [tag.save() for tag in tags if tag is not None]
 
     def create(self, request, **kwargs):
         serializer = PiDatabaseSerializer(data=request.data)
@@ -81,9 +85,22 @@ class PiDatabaseView(viewsets.ModelViewSet):
             cursor.execute(self.scan_query)
             tags = [tag for tag in cursor.fetchall()]
             scan = ScanEvent.objects.create(database=database)
+            new_tags = []
             for tag in tags:
-                print(tag)
-        return Response('test', 200)
+                new_tag = Tag(
+                    point_id=tag[0],
+                    name=tag[1],
+                    object_type='test',
+                    change_date=tag[2],
+                    changer=tag[3],
+                    creation_date=tag[4],
+                    creator=tag[5],
+                    exdesc=tag[6],
+                    scan=scan,
+                )
+                new_tags.append(new_tag)
+            self.save_tags(new_tags)
+            return Response({'count': len(tags), 'invalid': 0}, status=200)
 
 
 class FileUploadView(APIView):
