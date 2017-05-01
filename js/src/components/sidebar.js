@@ -15,12 +15,6 @@ class Sidebar extends Component {
     this.showTreeView = this.showTreeView.bind(this);
   }
 
-  componentWillMount() {
-    const { tags } = this.props;
-    const mode = tags.length === 0 ? 'scans' : 'tree';
-    this.setState({ mode });
-  }
-
   showScanView() {
     this.setState({ mode: 'scans' });
   }
@@ -31,6 +25,7 @@ class Sidebar extends Component {
 
   render() {
     const { mode } = this.state;
+    const { activeScan } = this.props;
     return (
       <div className="sidebar__container" >
         <div className="sidebar__tabs">
@@ -49,7 +44,7 @@ class Sidebar extends Component {
             Tag Tree
           </div>
         </div>
-        {mode === 'scans' ? <ScanList /> : <TreeMap />}
+        {mode === 'scans' ? <ScanList activeScan={activeScan} /> : <TreeMap />}
       </div>
     );
   }

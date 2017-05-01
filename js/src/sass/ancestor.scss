@@ -1,0 +1,23 @@
+/** D3 formatting */
+
+.node circle {
+  fill: #7ba7cc;
+  stroke: #b44682;
+  stroke-width: 1px;
+  cursor: pointer;
+}
+
+.node text { 
+  font-family: 'Roboto';
+  font-size: 0.85rem;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1px;
+}
+
+ul {
+  list-style-type: none;
+}

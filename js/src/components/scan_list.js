@@ -13,7 +13,6 @@ class ScanList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeScanId: undefined,
       confirmDelete: false,
       deleteError: false,
     };
@@ -31,14 +30,7 @@ class ScanList extends Component {
 
   handleSetActiveScan(scanId) {
     localStorage.setItem('activeScan', JSON.stringify(scanId));
-    this.setState({
-      activeScanId: scanId,
-      confirmDelete: false,
-      deleteError: false,
-    }, () => {
-      this.props.fetchTags(scanId);
-      this.props.history.push(`/${scanId}/`);
-    });
+    this.props.history.push(`/${scanId}/`);
   }
 
   handleStopDeleteProcess() {
@@ -48,17 +40,17 @@ class ScanList extends Component {
   }
 
   handleDelete() {
-    const { activeScanId, confirmDelete } = this.state;
+    const { activeScan } = this.props;
+    const { confirmDelete } = this.state;
     if (!confirmDelete) {
       this.setState({
         confirmDelete: true,
         deleteError: false,
       });
     } else {
-      axios.delete(`${API}/api/scans/${activeScanId}/`)
+      axios.delete(`${API}/api/scans/${activeScan}/`)
       .then(() => {
         this.setState({
-          activeScanId: undefined,
           confirmDelete: false,
           deleteError: false,
         }, () => this.props.fetchScans());
@@ -73,8 +65,9 @@ class ScanList extends Component {
   }
 
   render() {
-    const { activeScanId, confirmDelete, deleteError } = this.state;
-    const { scans } = this.props;
+    const { confirmDelete, deleteError } = this.state;
+    const { activeScan, scans } = this.props;
+    console.log(activeScan);
     return (
       <div className="scan_list__container" >
         <div className="scan_list__items">
@@ -83,7 +76,7 @@ class ScanList extends Component {
               key={scan.id}
               scan={scan}
               handleClick={this.handleSetActiveScan}
-              active={activeScanId && activeScanId === scan.id}
+              active={parseInt(activeScan, 10) === scan.id}
             />
           ))}
         </div>
@@ -112,7 +105,7 @@ class ScanList extends Component {
               </div>
             </div>
             : undefined}
-          {activeScanId && !confirmDelete ?
+          {activeScan && !confirmDelete ?
             <button
               className="uploader__button"
               onClick={this.handleDelete}

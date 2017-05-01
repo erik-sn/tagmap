@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import FilterTable from 'filter-table';
 
+import { fetchTags } from '../actions';
 import Error from './error';
-import TagDetail from './tag_detail';
+import Sidebar from './sidebar';
 
 require('filter-table/dist/index.css');
 
@@ -14,36 +15,36 @@ const config = [
 ];
 
 
-const tagRegex = /'(.*?)'/g;
-
-function parseEquationChildren(equation) {
-  let matches = [];
-  const output = [];
-  while (matches = tagRegex.exec(equation)) {
-    output.push(matches[1]);
-  }
-  return output;
-}
-
 class Taglist extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       tableHeight: undefined,
-      activeRow: undefined,
     };
     this.handleRowClick = this.handleRowClick.bind(this);
-    this.handleRemoveActiveRow = this.handleRemoveActiveRow.bind(this);
   }
 
   componentWillMount() {
+    const { fetchTags, match } = this.props;
+    fetchTags(match.params.scanId);
     this.getTableHeight();
     window.onresize = () => this.getTableHeight();
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { fetchTags, match } = this.props;
+    if (match.params.scanId !== prevProps.match.params.scanId) {
+      fetchTags(match.params.scanId);
+    }
+  }
+
   componentWillUnmount() {
     window.onresize = null;
+  }
+
+  getTags(scanId) {
+    this.props.fetchTags(scanId);
   }
 
   getTableHeight() {
@@ -54,26 +55,12 @@ class Taglist extends Component {
     this.setState({ tableHeight });
   }
 
-  handleRowClick(rowData, key) {
-    this.setState({ activeRow: rowData });
-  }
-
-  handleRemoveActiveRow() {
-    this.setState({ activeRow: undefined });
-  }
-
-  generateTagTree(inputTag) {
-    const { tags } = this.props;
-    const updatedTag = Object.assign({}, inputTag);
-    updatedTag.children = parseEquationChildren(inputTag.exdesc)
-                          .map(childName => tags.find(tag => tag.name === childName))
-                          .filter(tag => tag)
-                          .map(child => this.generateTagTree(child));
-    return updatedTag;
+  handleRowClick(rowData) {
+    const { history, match } = this.props;
+    history.push(`/${match.params.scanId}/${rowData.id}/`);
   }
 
   render() {
-    const { activeRow } = this.state;
     const { tags, error } = this.props;
     if (error) {
       return (
@@ -82,28 +69,21 @@ class Taglist extends Component {
         </div>
       );
     }
-
-    if (activeRow) {
-      const tagWithTree = this.generateTagTree(activeRow, null);
-      return (
-        <div className="taglist__container" id="taglist">
-          <TagDetail tag={tagWithTree} reset={this.handleRemoveActiveRow} />
-        </div>
-      );
-    }
-
     return (
-      <div className="taglist__container" id="taglist">
-        <FilterTable
-          tableData={tags}
-          config={config}
-          rowHeight={17}
-          tableHeight={this.state.tableHeight}
-          handleRowClick={this.handleRowClick}
-          showFilter
-          showCsv
-          showResults
-        />
+      <div className="taglist__outer-container">
+        <div className="taglist__container" id="taglist">
+          <FilterTable
+            tableData={tags}
+            config={config}
+            rowHeight={17}
+            tableHeight={this.state.tableHeight}
+            handleRowClick={this.handleRowClick}
+            showFilter
+            showCsv
+            showResults
+          />
+        </div>
+        <Sidebar activeScan={this.props.match.params.scanId} />
       </div>
     );
   }
@@ -116,4 +96,6 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Taglist);
+export default connect(mapStateToProps, {
+  fetchTags,
+})(Taglist);

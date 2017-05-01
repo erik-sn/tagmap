@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 
-import renderTree from '../d3/tree';
+import renderAncestor from '../d3/ancestor';
 
-function cleanTagHierarchy(tag, parentName) {
+function cleanTagDescendants(tag, parentName) {
   return Object.assign({}, {
     name: tag.name,
     parent: parentName,
-    children: tag.children.map(child => cleanTagHierarchy(child, tag.name)),
+    children: tag.descendants.map(child => cleanTagDescendants(child, tag.name)),
   });
 }
 
-class TreeDisplay extends Component {
+class AncestorDisplay extends Component {
 
   constructor(props) {
     super(props);
@@ -21,24 +21,23 @@ class TreeDisplay extends Component {
 
   componentDidMount() {
     const node = findDOMNode(this);
-    const cleanedTagHierarchy = cleanTagHierarchy(this.props.tag, null);
-    renderTree(node, [cleanedTagHierarchy]);
+    const cleanedTagHierarchy = cleanTagDescendants(this.props.tag, null);
+    renderAncestor(node, [cleanedTagHierarchy]);
 
     let resizeTimer;
     window.onresize = (() => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        console.log('render');
-        renderTree(node, [cleanedTagHierarchy]);
+        renderAncestor(node, [cleanedTagHierarchy]);
       }, 250);
     });
   }
 
   render() {
     return (
-      <div id="tree_display__container" />
+      <div id="ancestor__container" />
     );
   }
 }
 
-export default TreeDisplay;
+export default AncestorDisplay;

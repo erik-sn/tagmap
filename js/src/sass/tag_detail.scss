@@ -5,6 +5,24 @@
   width: 90%;
 }
 
+.tag_detail__labels {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  width: 85%;
+
+  h3 {
+    display: inline-block;
+    margin-right: 10px;
+  }
+}
+
+.tag_detail__label {
+  flex: 1 1 200px;
+}
+
 #tag_detail__back {
   position: absolute;
   top: 0px;
@@ -18,7 +36,7 @@
   background: lighten(#999, 10%);
 }
 
-.tag_detail__tree {
+.tag_detail__ancestor-chart {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -30,27 +48,3 @@
   margin-left: 25px;
 }
 
-
-/** D3 formatting */
-
-.node circle {
-  fill: #7ba7cc;
-  stroke: #b44682;
-  stroke-width: 1px;
-  cursor: pointer;
-}
-
-.node text { 
-  font-family: 'Roboto';
-  font-size: 0.85rem;
-}
-
-.link {
-  fill: none;
-  stroke: #ccc;
-  stroke-width: 1px;
-}
-
-ul {
-  list-style-type: none;
-}
