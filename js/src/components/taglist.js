@@ -26,15 +26,17 @@ class Taglist extends Component {
   }
 
   componentWillMount() {
-    const { fetchTags, match } = this.props;
-    fetchTags(match.params.scanId);
+    const { fetchTags, match, tags } = this.props;
+    if (!tags) {
+      fetchTags(match.params.scanId);
+    }
     this.getTableHeight();
     window.onresize = () => this.getTableHeight();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { fetchTags, match } = this.props;
-    if (match.params.scanId !== prevProps.match.params.scanId) {
+    const { fetchTags, match, tags } = this.props;
+    if (!tags && match.params.scanId !== prevProps.match.params.scanId) {
       fetchTags(match.params.scanId);
     }
   }
@@ -62,6 +64,9 @@ class Taglist extends Component {
 
   render() {
     const { tags, error } = this.props;
+    if (!tags) {
+      return <div>Loading...</div>;
+    }
     if (error) {
       return (
         <div className="taglist__container" id="taglist" >
@@ -89,9 +94,10 @@ class Taglist extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
+  const scanId = ownProps.match.params.scanId;
   return {
-    tags: state.data.tags,
+    tags: state.data.tags[scanId],
     error: state.data.error,
   };
 }

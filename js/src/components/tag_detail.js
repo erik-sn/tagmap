@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Ancestors from './ancestor_display';
+import { fetchTags } from '../actions';
+import Descendants from './descendant_display';
 import Influence from './influence_display';
 
 const Label = ({ label, value }) => (
@@ -25,10 +26,13 @@ function parseEquationChildren(equation) {
 
 function parseTagDescendants(inputTag, tags) {
   const updatedTag = Object.assign({}, inputTag);
-  updatedTag.descendants = parseEquationChildren(inputTag.exdesc)
-                        .map(childName => tags.find(tag => tag.name === childName))
-                        .filter(tag => tag)
-                        .map(child => this.parseTagDescendants(child));
+  const children = parseEquationChildren(updatedTag.exdesc);
+  const childBranches = children.map(childName => tags.find(tag => tag.name === childName))
+                                .filter(tag => tag)
+                                .map(child => parseTagDescendants(child, tags));
+  const childLeaves = children.filter(childName => !tags.find(tag => tag.name === childName))
+                              .map(leaf => ({ name: leaf, descendants: [] }));
+  updatedTag.descendants = childLeaves.concat(childBranches);
   return updatedTag;
 }
 
@@ -64,6 +68,20 @@ class TagDetail extends Component {
     };
   }
 
+  componentWillMount() {
+    const { tags, fetchTags, match } = this.props;
+    if (!tags) {
+      fetchTags(match.params.scanId);
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { fetchTags, match, tags } = this.props;
+    if (!tags && match.params.scanId !== prevProps.match.params.scanId) {
+      fetchTags(match.params.scanId);
+    }
+  }
+
   parseCousins() {
     return this.props.tag.ancestors.reduce((cousins, ancestor) => {
       return cousins.concat(ancestor.children);
@@ -74,17 +92,18 @@ class TagDetail extends Component {
   }
 
   render() {
-    if (this.props.notFound) {
-      return <div>Not Found</div>;
-    }
-    if (!this.props.tag) {
+    const { notFound, tag, tags } = this.props;
+    if (!tags) {
       return <div>Loading...</div>;
     }
+    if (notFound) {
+      return <div>Tag Not Found</div>;
+    }
     const { name, exdesc, creation_date, creator, descendants,
-      ancestors, change_date, changer, point_id } = this.props.tag;
+      ancestors, change_date, changer, point_id } = this.props.activeTag;
     return (
       <div className="tag_detail__container" id="tagdetail" >
-        <button id="tag_detail__back" onClick={this.props.reset}>Back</button>
+        {/*<button id="tag_detail__back" onClick={this.props.reset}>Back</button>*/}
         <h1>{name}</h1>
         <section className="tag_detail__labels">
           <Label label="Point ID" value={point_id} />
@@ -97,17 +116,17 @@ class TagDetail extends Component {
           <h3>Equation:</h3>
           {exdesc}
         </section>
-        <section className="tag_detail__ancestor">
+        <section className="tag_detail__descendant">
           {descendants.length > 0 ? <h3>Tag Descendants:</h3> : <h3>No Descendants Found</h3>}
-          <div className="tag_detail__ancestor-chart">
+          <div className="tag_detail__descendant-chart">
             {descendants.length > 0
-              ? <Ancestors tag={this.props.tag} />
+              ? <Descendants tag={this.props.activeTag} />
               : undefined}
           </div>
         </section>
-        <section className="tag_detail__parents">
+        <section className="tag_detail__ancestors">
           {ancestors.length > 0 ? <h3>Tag Ancestors:</h3> : <h3>No Ancestors Found</h3>}
-          {ancestors.length > 0 ? <Influence items={this.parseInfluence()} /> : undefined}
+          {ancestors.length > 0 ? <Influence items={this.props.influence} /> : undefined}
         </section>
       </div>
     );
@@ -115,21 +134,27 @@ class TagDetail extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  const tags = state.data.tags;
-  const tag = tags.find(t => t.id === parseInt(ownProps.match.params.tagId, 10));
+  const { scanId, tagId } = ownProps.match.params;
+  const tags = state.data.tags[scanId];
+  if (!tags) {
+    return { tags: undefined, notFound: false };
+  }
+
+  const tag = tags.find(t => t.id === parseInt(tagId, 10));
   if (!tag) {
-    return {
-      notFound: true,
-    };
+    return { tags, notFound: true };
   }
 
   const tagWithDescendants = parseTagDescendants(tag, tags);
   const tagWithAncestors = parseTagAncestors(tagWithDescendants, tags);
   return {
-    tag: tagWithAncestors,
-    influence: parseInfluence(tagWithAncestors),
+    tags,
+    activeTag: tagWithAncestors,
+    influence: parseInfluence(tagWithAncestors.ancestors),
     notFound: false,
   };
 }
 
-export default connect(mapStateToProps)(TagDetail);
+export default connect(mapStateToProps, {
+  fetchTags,
+})(TagDetail);

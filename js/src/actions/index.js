@@ -15,6 +15,9 @@ export function fetchTags(scanId) {
   return {
     payload: request,
     type: ACTIONS.FETCH_TAGS,
+    meta: {
+      scanId,
+    },
   };
 }
 

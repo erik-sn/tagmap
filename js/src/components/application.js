@@ -34,8 +34,8 @@ class Application extends Component {
           <div className="main__container">
             <Switch>
               <Route exact path="/" component={TagList} />
-              <Route exact path="/:scanId" component={TagList} />
-              <Route exact path="/:scanId/:tagId" component={TagDetail} />
+              <Route exact path="/:scanId/" component={TagList} />
+              <Route exact path="/:scanId/:tagId/" component={TagDetail} />
             </Switch >
           </div>
         </div>

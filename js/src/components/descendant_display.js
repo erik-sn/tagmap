@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 
-import renderAncestor from '../d3/ancestor';
+import renderDescendants from '../d3/descendants';
 
 function cleanTagDescendants(tag, parentName) {
   return Object.assign({}, {
@@ -22,13 +22,13 @@ class AncestorDisplay extends Component {
   componentDidMount() {
     const node = findDOMNode(this);
     const cleanedTagHierarchy = cleanTagDescendants(this.props.tag, null);
-    renderAncestor(node, [cleanedTagHierarchy]);
+    renderDescendants(node, [cleanedTagHierarchy]);
 
     let resizeTimer;
     window.onresize = (() => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        renderAncestor(node, [cleanedTagHierarchy]);
+        renderDescendants(node, [cleanedTagHierarchy]);
       }, 250);
     });
   }

@@ -45,9 +45,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: undefined,
-        tags: action.payload.data.map(tag => (
-          parseDate(tag, 'creation_date', 'change_date')),
-        ),
+        tags: {
+          ...state.tags,
+          [action.meta.scanId]: action.payload.data.map(tag => (
+            parseDate(tag, 'creation_date', 'change_date')),
+          ),
+        },
       };
     default:
       return state;

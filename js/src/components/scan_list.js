@@ -67,7 +67,6 @@ class ScanList extends Component {
   render() {
     const { confirmDelete, deleteError } = this.state;
     const { activeScan, scans } = this.props;
-    console.log(activeScan);
     return (
       <div className="scan_list__container" >
         <div className="scan_list__items">
