@@ -17,7 +17,6 @@ class AncestorDisplay extends Component {
       name: 'tree',
       children: this.props.items,
     };
-    console.log(tree);
     renderTree(node, tree);
 
     let resizeTimer;

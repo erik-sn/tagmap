@@ -14,23 +14,31 @@ function getTreeDepth(treeData) {
   return 1 + depth;
 }
 
+function getTreeHeight(treeData) {
+  return treeData.reduce((count, branch) => {
+    const leaves = branch.children.filter(twig => twig.children.length === 0).length;
+    const branches = branch.children.filter(twig => twig.children.length > 0);
+    return count + leaves + getTreeHeight(branches);
+  }, 0);
+}
+
 export default function (svgDomNode, treeData) {
 
-  const depth = getTreeDepth(treeData[0]);
+  let treeWidth = getTreeDepth(treeData[0]);
+  let treeHeight = getTreeHeight(treeData);
 
-
-  // ************** Generate the tree diagram	 *****************
+  // ************** Generate the tree diagram*****************
   const root = treeData[0];
   const margin = { top: 20, right: 20, bottom: 20, left: root.name.length * 20 };
-  const width = (depth * 350) - margin.right - margin.left;
-  const height = 500 - margin.top - margin.bottom;
+  const width = (treeWidth * 400) - margin.right - margin.left;
+  const height = (treeHeight * 20) - margin.top - margin.bottom;
 
   let i = 0;
   const duration = 750;
 
   d3.select(svgDomNode).selectAll('*').remove();
 
-  const tree = d3.layout.tree().size([height, depth * 350]);
+  let tree = d3.layout.tree().size([height, treeWidth * 350]);
   const diagonal = d3.svg.diagonal().projection(d => [d.y, d.x]);
   const svg = d3.select(svgDomNode).append('svg')
     .attr('width', width + margin.right + margin.left)
@@ -41,14 +49,34 @@ export default function (svgDomNode, treeData) {
   root.x0 = height / 2;
   root.y0 = 0;
 
-  update(root);
+  update(root, true);
 
   d3.select(self.frameElement).style('height', '500px');
 
-  function update(source) {
+  function update(source, initial) {
     // Compute the new tree layout.
-    const nodes = tree.nodes(root).reverse();
-    const links = tree.links(nodes);
+    let nodes = tree.nodes(root).reverse();
+    let links = tree.links(nodes);
+    console.log(links);
+
+    if (!initial) {
+      // calculate depth and update width to correspond
+      let maxDepth = 0;
+      nodes.forEach((n) => {
+        if (n.depth > maxDepth) {
+          maxDepth = n.depth;
+        }
+      });
+      const leaves = nodes.filter((n) => n.depth === maxDepth).length;
+
+      const newWidth = maxDepth * 350;
+      const newHeight = (leaves * 25);
+      tree = tree.size([newHeight, newWidth]);
+      nodes = tree.nodes(root).reverse();
+      links = tree.links(nodes);
+      d3.select('svg').attr('width', newWidth + margin.right + margin.left);
+      d3.select('svg').attr('height', newHeight + margin.top + margin.bottom);
+    }
 
     // Normalize for fixed-depth.
     nodes.forEach((d) => { d.y = d.depth * 180; });
