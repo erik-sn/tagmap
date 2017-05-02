@@ -4,9 +4,30 @@
   margin: 15px 40px;
   position: relative;
   width: 90%;
+
+  a {
+    text-decoration: none;
+  }
+}
+
+#tag_detail__return {
+  width: 225px;
+}
+
+.tag_detail__header {
+  padding: 15px;
+  font-size: 1.8rem;
+  background: darken($primary, 25%);
+  color: white;
+}
+
+.tag_detail__info {
+  margin-top: 15px;
+  border: 1px solid darken($primary, 25%);
 }
 
 .tag_detail__labels {
+  margin: 10px 0px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -16,7 +37,7 @@
 
   h3 {
     display: inline-block;
-    margin-right: 10px;
+    margin: 0px 10px;
   }
 }
 
@@ -31,10 +52,8 @@
 }
 
 .tag_detail__equation {
-  border: 1px solid #999;
-  border-radius: 3px;
-  padding: 10px;
-  background: lighten(#999, 10%);
+  padding: 15px 35px;
+  background: $secondary;
 }
 
 .tag_detail__ancestor-chart {

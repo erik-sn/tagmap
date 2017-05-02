@@ -139,10 +139,12 @@ class Uploader extends Component {
               className="uploader__button"
               onClick={this.handleSubmit}
             >
+              <img src={`${API}/static/api/check.svg`} alt="submit" />
               Submit
             </button> : undefined}
-          {!uploading ? 
-            <div className="inputWrapper uploader__button">
+          {!uploading && !uploadFile ? 
+            <div className="inputWrapper uploader__button" style={{ width: '110px' }}>
+              <img src={`${API}/static/api/upload.svg`} alt="upload file" />
               Choose File
               <input
                 className="fileInput"
@@ -158,6 +160,7 @@ class Uploader extends Component {
               className="uploader__button"
               onClick={this.handleCancel}
             >
+              <img src={`${API}/static/api/cancel.svg`} alt="cancel" />
               Cancel
             </button>
             : undefined}
@@ -165,6 +168,7 @@ class Uploader extends Component {
             className="uploader__button"
             onClick={this.props.toggleFileUploader}
           >
+            <img src={`${API}/static/api/delete.svg`} alt="close" /> 
             Close
           </button>
         </div>

@@ -109,12 +109,13 @@ class Odbc extends Component {
         <div className="odbc_scan__error-container">
           {deleteError ? 'There was an error deleting this database' : ''}
         </div>
-        <div className="odbc_scan__button-container">
+        <div className="odbc_scan__button-container button__container">
           {scanning ?
             <button
               className="uploader__button"
               onClick={this.cancelScan}
             >
+              <img src={`${API}/static/api/cancel.svg`} alt="submit" />
               Cancel
             </button>
             : undefined}
@@ -123,6 +124,7 @@ class Odbc extends Component {
               className="uploader__button"
               onClick={this.handleScan}
             >
+              <img src={`${API}/static/api/scan.svg`} alt="submit" />
               Scan
             </button>
           : undefined}
@@ -132,6 +134,7 @@ class Odbc extends Component {
               className="uploader__button"
               onClick={this.handleDelete}
             >
+              <img src={`${API}/static/api/delete.svg`} alt="submit" />
               Delete
             </button>
           : undefined}
@@ -140,6 +143,7 @@ class Odbc extends Component {
               className="uploader__button"
               onClick={this.props.toggleScanOdbc}
             >
+              <img src={`${API}/static/api/cancel.svg`} alt="submit" />
               Close
             </button>
           : undefined}

@@ -19,12 +19,11 @@
   background: $button;
   color: $font-light;
   cursor: pointer;
-  border: 1px solid $button;
   transition: 0.15s ease-in-out;
 
   &:hover {
-    background: lighten($font-light, 10%);
-    color: $button;
+    background: darken($primary, 25%);
+    color: $font-light;
   }
 }
 

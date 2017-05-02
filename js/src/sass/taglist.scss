@@ -54,12 +54,18 @@
 
 .filter_table__row {
   cursor: pointer;
-  padding: 2px 15px;
+  padding: 2px 5px;
+  border-top: 1px solid $secondary;
+  border-left: 1px solid $secondary;
 
   transition: 0.1s ease-in-out;
   
   &:hover {
     background: lighten($button, 45%);
+  }
+
+  &:nth-child(odd) {
+    background: lighten($secondary, 10%);
   }
 }
 

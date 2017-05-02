@@ -23,9 +23,6 @@
     font-style: italic;
   }
 
-  img {
-    text-align: center;
-  }
 }
 
 .odbc__button-container {
@@ -60,12 +57,8 @@ databases to generate ScanEvents
 .odbc_scan__container {
   @include modal();
   min-height: 300px;
-  max-height: 500px;
+  max-height: 600px;
 
-  img {
-    padding: 30px 0px;
-    margin-left: calc(50% - 70px);
-  }
 }
 .odbc_scan__database-container {
   height: 300px;

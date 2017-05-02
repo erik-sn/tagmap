@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 
+import { API } from '../actions/constants';
 import { fetchTags } from '../actions';
 import { parseTagAncestors, parseTagDescendants,
   parseInfluence } from '../utils';
@@ -55,18 +56,26 @@ class TagDetail extends Component {
       ancestors, change_date, changer, point_id } = this.props.activeTag;
     return (
       <div className="tag_detail__container" id="tagdetail" >
-        <Link to={`/${match.params.scanId}/`}><button className="uploader__button">Back to Tag List</button></Link>
-        <h1>{name}</h1>
-        <section className="tag_detail__labels">
-          <Label label="Point ID" value={point_id} />
-          <Label label="Created" value={creation_date} />
-          <Label label="Creator" value={creator} />
-          <Label label="Changed" value={change_date} />
-          <Label label="Changer" value={changer} />
-        </section>
-        <section className="tag_detail__equation">
-          <h3>Equation:</h3>
-          {exdesc}
+        <Link to={`/${match.params.scanId}/`}>
+          <button className="uploader__button" id="tag_detail__return" >
+            <img src={`${API}/static/api/return.svg`} alt="return" />
+            Back to Tag List
+          </button>
+        </Link>
+        <section className="tag_detail__info">
+          <div className="tag_detail__header">
+            {name}
+          </div>
+          <div className="tag_detail__labels">
+            <Label label="Point ID" value={point_id} />
+            <Label label="Created" value={creation_date} />
+            <Label label="Creator" value={creator} />
+            <Label label="Changed" value={change_date} />
+            <Label label="Changer" value={changer} />
+          </div>
+          <div className="tag_detail__equation">
+            {exdesc}
+          </div>
         </section>
         <section className="tag_detail__descendant">
           {descendants.length > 0 ? <h3>Tag Descendants:</h3> : <h3>No Descendants Found</h3>}

@@ -19,17 +19,12 @@ class Odbc extends Component {
       submitting: false,
     };
     this.state = this.defaultState;
-    this.handleCancel = this.handleCancel.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange({ currentTarget }) {
     this.setState({ [currentTarget.name]: currentTarget.value });
-  }
-
-  handleCancel() {
-    this.setState(this.defaultState);
   }
 
   handleSubmit() {
@@ -81,23 +76,19 @@ class Odbc extends Component {
         <div className="odbc__success-container">
           {success ? 'ODBC connection successfully created' : undefined}
         </div>
-        <div className="odbc__button-container">
+        <div className="odbc__button-container button__container">
           <button
             className="uploader__button"
             onClick={this.handleSubmit}
           >
+            <img src={`${API}/static/api/check.svg`} alt="submit" />
             Submit
-          </button>
-          <button
-            className="uploader__button"
-            onClick={this.handleCancel}
-          >
-            Cancel
           </button>
           <button
             className="uploader__button"
             onClick={this.props.toggleCreateOdbc}
           >
+            <img src={`${API}/static/api/cancel.svg`} alt="cancel" />
             Close
           </button>
         </div>

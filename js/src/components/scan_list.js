@@ -90,17 +90,19 @@ class ScanList extends Component {
               <div className="scan_list__confirm">
                 Are you sure you want to delete this scan?
               </div>
-              <div>
+              <div className="button__container" >
                 <button
                   className="uploader__button"
                   onClick={this.handleDelete}
                 >
+                  <img src={`${API}/static/api/check.svg`} alt="confirm" />
                   Confirm
                 </button>
                 <button
                   className="uploader__button"
                   onClick={this.handleStopDeleteProcess}
                 >
+                  <img src={`${API}/static/api/cancel.svg`} alt="cancel" />
                   Cancel
                 </button>
               </div>
@@ -111,6 +113,7 @@ class ScanList extends Component {
               className="uploader__button"
               onClick={this.handleDelete}
             >
+              <img src={`${API}/static/api/delete.svg`} alt="confirm" />
               Delete
             </button>
             : undefined}

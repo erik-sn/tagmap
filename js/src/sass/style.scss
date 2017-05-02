@@ -31,16 +31,28 @@ body, html {
   font-weight: 600 !important;
   box-shadow: 1px 1px 1px 0px $font-dark;
   border: 1px solid $button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   transition: 0.15s ease-in-out;
+
+  img {
+    height: 100%;
+  }
 
   &:focus {
     outline: 0;
   }
 
   &:hover {
-    background: $font-light;
-    color: $button;
-    border: 1px solid $button;
+    background: darken($primary, 25%);
+    border: 1px solid darken($primary, 25%);
   }
+}
+
+
+.button__container {
+  display: flex;
+  flex-direction: row;
 }
