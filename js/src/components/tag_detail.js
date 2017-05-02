@@ -3,75 +3,12 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 
 import { fetchTags } from '../actions';
+import { parseTagAncestors, parseTagDescendants,
+  parseInfluence } from '../utils';
 import Descendants from './descendant_display';
 import Influence from './influence_display';
 import Error from './error';
-
-const Label = ({ label, value }) => (
-  <div className="tag_detail__label">
-    <h3>{label}:</h3>
-    <span className="tag_detail__name">{value}</span>
-  </div>
-);
-
-
-const tagRegex = /'(.*?)'/g;
-
-function parseEquationChildren(equation) {
-  let matches = [];
-  const output = [];
-  while (matches = tagRegex.exec(equation)) {
-    output.push(matches[1]);
-  }
-  return output;
-}
-
-function parseChildLeaves(children, tags) {
-  return children.filter(childName => !tags.find(tag => tag.name === childName))
-                 .map(leaf => ({ name: leaf, descendants: [] }));
-}
-
-
-function parseChildBranches(children, tags, ancestors) {
-  return children.map(childName => tags.find(tag => tag.name === childName))
-                 .filter(tag => tag)
-                 .map(child => parseTagDescendants(child, tags, ancestors.concat(children)));
-}
-
-function parseTagDescendants(inputTag, tags, ancestors = []) {
-  const updatedTag = Object.assign({}, inputTag);
-  const children = parseEquationChildren(updatedTag.exdesc)
-                    .filter(childName => ancestors.indexOf(childName) === -1);
-
-  const childBranches = parseChildBranches(children, tags, ancestors);
-  const childLeaves = parseChildLeaves(children, tags);
-  updatedTag.descendants = childLeaves.concat(childBranches);
-  return updatedTag;
-}
-
-function parseTagAncestors(inputTag, tags) {
-  const updatedTag = Object.assign({}, inputTag);
-  const tagName = updatedTag.name.toLowerCase();
-  updatedTag.ancestors = tags.filter((tag) => {
-    return tag.exdesc.toLowerCase().indexOf(tagName) > -1;
-  })
-  .map((tag) => {
-    const ancestorTag = Object.assign({}, tag);
-    ancestorTag.children = parseEquationChildren(ancestorTag.exdesc);
-    return ancestorTag;
-  });
-  return updatedTag;
-}
-
-function parseInfluence(ancestors) {
-  return ancestors.map((ancestor) => {
-    const childCount = ancestor.children.length;
-    return {
-      name: ancestor.name,
-      size: childCount < 1 ? 4 : childCount * 4,
-    };
-  });
-}
+import Label from './tag_detail_label';
 
 class TagDetail extends Component {
 
@@ -88,7 +25,7 @@ class TagDetail extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     const { fetchTags, match, tags } = this.props;
     if (!tags && match.params.scanId !== prevProps.match.params.scanId) {
       fetchTags(match.params.scanId);
@@ -154,7 +91,7 @@ function mapStateToProps(state, ownProps) {
   if (!tags) {
     return { tags: undefined, notFound: false };
   } else if (tags === 404) {
-    return { tags }
+    return { tags };
   }
 
   const tag = tags.find(t => t.id === parseInt(tagId, 10));
