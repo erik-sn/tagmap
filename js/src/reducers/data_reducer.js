@@ -3,7 +3,7 @@ import { ACTIONS } from '../actions/constants';
 export const initialState = {
   databases: [],
   scans: [],
-  tags: [],
+  tags: {},
   error: undefined,
 };
 
@@ -18,12 +18,6 @@ function parseDate(item, createkey, modifyKey) {
 }
 
 export default (state = initialState, action) => {
-  if (action.error) {
-    return {
-      ...state,
-      error: action.payload.message,
-    };
-  }
   switch (action.type) {
     case ACTIONS.FETCH_SCANS:
       return {
@@ -42,6 +36,15 @@ export default (state = initialState, action) => {
         ),
       };
     case ACTIONS.FETCH_TAGS:
+      if (action.error && action.payload.response.status === 404) {
+        return {
+          ...state,
+          tags: {
+            ...state.tags,
+            [action.meta.scanId]: 404,
+          },
+        };
+      }
       return {
         ...state,
         error: undefined,

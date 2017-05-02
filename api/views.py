@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework import viewsets
-from rest_framework import generics
 from dateutil.parser import parse
 
 from .models import ScanEvent, Tag, PiDatabase
@@ -34,6 +33,10 @@ class TagView(viewsets.ReadOnlyModelViewSet):
         return Response(TagSerializer(tags, many=True).data, 200)
 
     def retrieve(self, request, pk=None, *args, **kwargs):
+        try:
+            scan = ScanEvent.objects.get(id=pk)
+        except:
+            return Response(status=404)
         tags = Tag.objects.filter(scan__id=pk)
         serializer = TagSerializer(tags, many=True)
         return Response(serializer.data, 200)
