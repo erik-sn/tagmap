@@ -22,9 +22,11 @@ class ScanList extends Component {
   }
 
   componentWillMount() {
-    const lastSeenScanId = JSON.parse(localStorage.getItem('activeScan'));
-    if (lastSeenScanId) {
-      this.handleSetActiveScan(lastSeenScanId);
+    if (!this.props.activeScan) {
+      const lastSeenScanId = JSON.parse(localStorage.getItem('activeScan'));
+      if (lastSeenScanId) {
+        this.handleSetActiveScan(lastSeenScanId);
+      }
     }
   }
 

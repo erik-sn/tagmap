@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 
 import { fetchTags } from '../actions';
 import Descendants from './descendant_display';
@@ -92,7 +93,7 @@ class TagDetail extends Component {
   }
 
   render() {
-    const { notFound, tag, tags } = this.props;
+    const { notFound, tag, tags, match } = this.props;
     if (!tags) {
       return <div>Loading...</div>;
     }
@@ -103,7 +104,7 @@ class TagDetail extends Component {
       ancestors, change_date, changer, point_id } = this.props.activeTag;
     return (
       <div className="tag_detail__container" id="tagdetail" >
-        {/*<button id="tag_detail__back" onClick={this.props.reset}>Back</button>*/}
+        <Link to={`/${match.params.scanId}/`}><button className="uploader__button">Back to Tag List</button></Link>
         <h1>{name}</h1>
         <section className="tag_detail__labels">
           <Label label="Point ID" value={point_id} />
@@ -155,6 +156,6 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, {
+export default withRouter(connect(mapStateToProps, {
   fetchTags,
-})(TagDetail);
+})(TagDetail));

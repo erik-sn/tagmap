@@ -57,7 +57,6 @@ export default function (svgDomNode, treeData) {
     // Compute the new tree layout.
     let nodes = tree.nodes(root).reverse();
     let links = tree.links(nodes);
-    console.log(links);
 
     if (!initial) {
       // calculate depth and update width to correspond

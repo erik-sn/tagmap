@@ -32,12 +32,20 @@ class Taglist extends Component {
     }
     this.getTableHeight();
     window.onresize = () => this.getTableHeight();
+
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { fetchTags, match, tags } = this.props;
     if (!tags && match.params.scanId !== prevProps.match.params.scanId) {
       fetchTags(match.params.scanId);
+    }
+
+    const table = document.querySelector('.filter_table__body');
+    if (table) {
+      table.addEventListener('scroll', () => {
+
+      });
     }
   }
 
@@ -80,7 +88,7 @@ class Taglist extends Component {
           <FilterTable
             tableData={tags}
             config={config}
-            rowHeight={17}
+            rowHeight={25}
             tableHeight={this.state.tableHeight}
             handleRowClick={this.handleRowClick}
             showFilter

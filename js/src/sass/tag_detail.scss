@@ -1,6 +1,7 @@
 @import "./style";
 
 .tag_detail__container {
+  margin: 15px 40px;
   position: relative;
   width: 90%;
 }
@@ -8,7 +9,7 @@
 .tag_detail__labels {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-content: flex-start;
   flex-wrap: wrap;
   width: 85%;
@@ -48,3 +49,7 @@
   margin-left: 25px;
 }
 
+#ancestor__container {
+  max-height: 600px;
+  overflow: auto;
+}
