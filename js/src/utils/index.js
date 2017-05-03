@@ -17,7 +17,6 @@ function parseChildLeaves(children, tags) {
                  .map(leaf => ({ name: leaf, descendants: [] }));
 }
 
-
 function parseChildBranches(children, tags, ancestors) {
   return children.map(childName => tags.find(tag => tag.name === childName))
                  .filter(tag => tag)
@@ -25,6 +24,18 @@ function parseChildBranches(children, tags, ancestors) {
                  .map(child => parseTagDescendants(child, tags, ancestors.concat(children)));
 }
 
+/**
+ * recursively determine all children/descendants of the
+ * input tag. Direct descendants are any tags that the input
+ * uses in its equation.
+ * @param {object} inputTag - tag being analyzed
+ * @param {object[]} tags - list of all tags for the selected scan id
+ * @param {string[]} [ancestors=[]] - list ancestor names - this is
+ * recursively passed down the chain in order to avoid infinite loops
+ * where a descendant may refer to an ancestor in their equation. Such
+ * cases will cause the browser to crash
+ * @returns copied inputTag with the descendants as an additional property
+ */
 export function parseTagDescendants(inputTag, tags, ancestors = []) {
   const updatedTag = Object.assign({}, inputTag);
   // prevent infinite recursion by purging any tags that already
@@ -38,6 +49,15 @@ export function parseTagDescendants(inputTag, tags, ancestors = []) {
   return updatedTag;
 }
 
+/**
+ * retrieve the first level ancestors (parents who use
+ * the input tag) for the specified tag
+ * @param {object} inputTag - tag being analyzed
+ * @param {object[]} tags - list of all tags in the selected
+ * scan event
+ * @returns a copy of the input tag with the additional
+ * ancestors property
+ */
 export function parseTagAncestors(inputTag, tags) {
   const updatedTag = Object.assign({}, inputTag);
   const tagName = updatedTag.name.toLowerCase();
@@ -52,6 +72,14 @@ export function parseTagAncestors(inputTag, tags) {
   return updatedTag;
 }
 
+/**
+ * retrieve the "influence" of a tag based on the amount of
+ * ancestors it has and their children
+ * @param {object[]} ancestors - list of tags that utilize
+ * this tag in their equations
+ * @returns ancestors - list of key/value pairs with the ancestor
+ * and their size ("influence")
+ */
 export function parseInfluence(ancestors) {
   return ancestors.map((ancestor) => {
     const childCount = ancestor.children.length;
