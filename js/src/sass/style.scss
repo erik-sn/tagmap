@@ -56,3 +56,11 @@ body, html {
   display: flex;
   flex-direction: row;
 }
+
+.loader__container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

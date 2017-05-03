@@ -5,6 +5,7 @@ import FilterTable from 'filter-table';
 import { fetchTags } from '../actions';
 import Error from './error';
 import Sidebar from './sidebar';
+import Loader from './loader';
 
 require('filter-table/dist/index.css');
 
@@ -78,7 +79,7 @@ class Taglist extends Component {
     } else if (tags === 404) {
       return <Error message="Scan ID Not Found" />;
     } else if (match.params.scanId && !tags) {
-      return <div>Loading...</div>;
+      return <Loader size={150} minHeight={500} />;
     }
     return (
       <FilterTable

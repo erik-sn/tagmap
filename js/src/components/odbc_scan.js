@@ -5,6 +5,7 @@ import axios from 'axios';
 import { API } from '../actions/constants';
 import { fetchDatabases, fetchScans, toggleScanOdbc } from '../actions';
 import Database from './database';
+import Loader from './loader';
 
 class Odbc extends Component {
 
@@ -91,7 +92,7 @@ class Odbc extends Component {
       <div className="odbc_scan__container" >
         <h2>Scan PI Database</h2>
         {scanning
-          ? <img height="150px" src={`${API}/static/api/gears.gif`} alt="loading" />
+          ? <Loader size={150} minHeight={200} />
           : <div className="odbc_scan__database-container">
             {databases.length === 0 ?
               <h4>There are no PI Databases configured</h4>

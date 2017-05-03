@@ -36,13 +36,13 @@ class Sidebar extends Component {
           >
             Scans
           </div>
-          <div
+          {/*<div
             className={`sidebar__tab${mode === 'tree' ? ' sidebar__active' : ''}`}
             role="button"
             onClick={this.showTreeView}
           >
             Tag Tree
-          </div>
+          </div>*/}
         </div>
         {mode === 'scans' ? <ScanList activeScan={activeScan} /> : <TreeMap />}
       </div>

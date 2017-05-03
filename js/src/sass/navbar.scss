@@ -10,7 +10,8 @@
 }
 
 #app__icon {
-  margin: 0px 25px;
+  padding: 0px 25px;
+  background: darken($primary, 25%);
 }
 
 .navbar__item {

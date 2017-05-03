@@ -7,9 +7,9 @@ import { fetchTags } from '../actions';
 import { parseTagAncestors, parseTagDescendants,
   parseInfluence } from '../utils';
 import Descendants from './descendant_display';
-import Influence from './influence_display';
 import Error from './error';
 import Label from './tag_detail_label';
+import Loader from './loader';
 
 class TagDetail extends Component {
 
@@ -50,7 +50,7 @@ class TagDetail extends Component {
     } else if (notFound) {
       return <Error message="Tag not found" />;
     } else if (match.params.scanId && !tags) {
-      return <div>Loading...</div>;
+      return <Loader size={150} minHeight={500} />;
     }
     const { name, exdesc, creation_date, creator, descendants,
       ancestors, change_date, changer, point_id } = this.props.activeTag;
@@ -85,10 +85,10 @@ class TagDetail extends Component {
               : undefined}
           </div>
         </section>
-        <section className="tag_detail__ancestors">
+        {/*<section className="tag_detail__ancestors">
           {ancestors.length > 0 ? <h3>Tag Ancestors:</h3> : <h3>No Ancestors Found</h3>}
           {ancestors.length > 0 ? <Influence items={this.props.influence} /> : undefined}
-        </section>
+        </section>*/}
       </div>
     );
   }

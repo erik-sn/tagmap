@@ -61,14 +61,8 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  height: 500px;
 }
 
 .tree_item__container {
   margin-left: 25px;
-}
-
-#ancestor__container {
-  max-height: 600px;
-  overflow: auto;
 }

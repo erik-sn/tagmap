@@ -6,6 +6,8 @@ import Dropzone from 'react-dropzone';
 import { API } from '../actions/constants';
 import { fetchScans, toggleFileUploader } from '../actions';
 
+import Loader from './loader';
+
 class Uploader extends Component {
 
   defaultState = {
@@ -62,7 +64,7 @@ class Uploader extends Component {
     if (httpRequest) {
       // case when we are actively uploading a file
       httpRequest.cancel();
-      this.setState({ uploading: false });
+      this.setState({ uploading: false, httpRequest: undefined });
     } else {
       // case when we just want to clear the form
       this.setState(this.defaultState);
@@ -85,6 +87,7 @@ class Uploader extends Component {
           invalid: res.data.invalid,
           count: res.data.count,
           uploading: false,
+          httpRequest: undefined,
         }, () => this.props.fetchScans());
       })
       .catch((err) => {
@@ -100,6 +103,7 @@ class Uploader extends Component {
           count: undefined,
           invalid: undefined,
           uploading: false,
+          httpRequest: undefined,
         });
       });
   }
@@ -117,15 +121,13 @@ class Uploader extends Component {
     const { uploadedFile, error, count, invalid, uploading } = this.state;
     const dropClass = `uploader__dropzone${error ? ' dropzone__error' : ''}`;
 
-    let messageContainer = <div className="uploader__label">{this.chooseMessage()}</div>;
-    if (uploading) {
-      messageContainer = <img height="110px" src={`${API}/static/api/gears.gif`} alt="loading" />;
-    }
-
     return (
       <div className="uploader__prompt">
         <Dropzone className={dropClass} onDrop={this.handleDrop}>
-          {messageContainer}
+          {uploading ?
+            <Loader size={125} /> :
+            <div className="uploader__label">{this.chooseMessage()}</div>
+          }
         </Dropzone>
         <div className="uploader__error">
           {error}
@@ -142,7 +144,7 @@ class Uploader extends Component {
               <img src={`${API}/static/api/check.svg`} alt="submit" />
               Submit
             </button> : undefined}
-          {!uploading && !uploadFile ? 
+          {!uploading && !uploadedFile ? 
             <div className="inputWrapper uploader__button" style={{ width: '110px' }}>
               <img src={`${API}/static/api/upload.svg`} alt="upload file" />
               Choose File
@@ -164,13 +166,14 @@ class Uploader extends Component {
               Cancel
             </button>
             : undefined}
-          <button
+          {!uploading && !uploadedFile ? <button
             className="uploader__button"
             onClick={this.props.toggleFileUploader}
           >
-            <img src={`${API}/static/api/delete.svg`} alt="close" /> 
+            <img src={`${API}/static/api/cancel.svg`} alt="close" /> 
             Close
           </button>
+          : undefined}
         </div>
       </div>
     );

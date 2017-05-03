@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import { API } from '../actions/constants';
 import { fetchDatabases, toggleCreateOdbc } from '../actions';
+import Loader from './loader';
 
 class Odbc extends Component {
 
@@ -52,7 +53,7 @@ class Odbc extends Component {
     if (submitting) {
       return (
         <div className="odbc__container odbc__loading-container">
-          <img height="150px" src={`${API}/static/api/gears.gif`} alt="loading" />
+          <Loader size={150} />
         </div>
       );
     }
@@ -62,13 +63,33 @@ class Odbc extends Component {
         {submitting ? this.renderLoader() :
         <div className="odbc__input-container">
           <h4>Name</h4>
-          <input type="text" name="name" value={this.state.name} onChange={this.handleChange} />
+          <input
+            type="text"
+            name="name"
+            value={this.state.name}
+            onChange={this.handleChange}
+          />
           <h4>Server</h4><span>IP address/Host that SQL subystem is installed on</span>
-          <input type="text" name="server" value={this.state.server} onChange={this.handleChange} />
+          <input
+            type="text"
+            name="server"
+            value={this.state.server}
+            onChange={this.handleChange}
+          />
           <h4>Data Source</h4><span>IP address/Host of PI server</span>
-          <input type="text" name="data_source" value={this.state.data_source} onChange={this.handleChange} />
+          <input
+            type="text"
+            name="data_source"
+            value={this.state.data_source}
+            onChange={this.handleChange}
+          />
           <h4>Description</h4>
-          <input type="text" name="description" value={this.state.description} onChange={this.handleChange} />
+          <input
+            type="text"
+            name="description"
+            value={this.state.description}
+            onChange={this.handleChange}
+          />
         </div>}
         <div className="odbc__error-container">
           {errors ? errors.map(error => <div className="odbc__error">{error}</div>) : undefined}
