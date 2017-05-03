@@ -7,9 +7,6 @@ import Error from './error';
 import Sidebar from './sidebar';
 import Loader from './loader';
 
-require('filter-table/dist/index.css');
-
-
 const config = [
   { key: 'name', header: 'Name', width: '25%' },
   { key: 'exdesc', header: 'Equation', width: '75%' },
@@ -75,7 +72,7 @@ class Taglist extends Component {
   renderContainer() {
     const { match, tags } = this.props;
     if (!match.params.scanId) {
-      return <div>Select a Scan to Analyze</div>;
+      return <h1>Select a Scan to Analyze</h1>;
     } else if (tags === 404) {
       return <Error message="Scan ID Not Found" />;
     } else if (match.params.scanId && !tags) {

@@ -24,6 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Environment specific settings from environment variables or local .env file
 SECRET_KEY = os.environ.get('SECRET_KEY', 'zmq$e0i#89+7vwmi#y!b_3o@wgl!(!dt!%0)-hul^qw1e6*^yp')
 DEBUG = bool(os.environ.get('DEBUG', False))
+TOOLBAR = bool(os.environ.get('TOOLBAR', False))
 
 # specify in environment variables (.env) whether or not we are serving
 # this application from express.js or django
@@ -41,7 +42,7 @@ INSTALLED_APPS = [
     # third party libraries
     'rest_framework',
     'corsheaders',
-    'debug_toolbar',
+    # 'debug_toolbar',
 
 
     'django.contrib.admin',
@@ -56,13 +57,14 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'config.urls'
 

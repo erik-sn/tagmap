@@ -10,12 +10,11 @@ urlpatterns = [
 ]
 
 # troubleshooting tool
-if settings.DEBUG:
+if settings.TOOLBAR:
     import debug_toolbar
     urlpatterns = [
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
-
 
 """
 If we are serving the base html file through django then
@@ -23,4 +22,4 @@ route all non-matching urls to the html file where they
 will be processed on the client by the react application
 """
 if settings.SERVER_TYPE.upper() == 'DJANGO':
-    urlpatterns += [url(r'.*$', index)]
+    urlpatterns += [url(r'^.*$', index)]
