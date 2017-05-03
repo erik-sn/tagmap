@@ -11,6 +11,7 @@ export const initialState = {
   ...defaultModalStates,
 };
 
+/** Handle Modal configuration */
 export default (state = initialState, action) => {
   switch (action.type) {
     case ACTIONS.TOGGLE_CREATE_ODBC:

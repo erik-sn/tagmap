@@ -1,9 +1,11 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import { API } from '../actions/constants';
-import { fetchTags } from '../actions';
+import { fetchTags as getTags } from '../actions';
 import { parseTagAncestors, parseTagDescendants,
   parseInfluence } from '../utils';
 import Descendants from './descendant_display';
@@ -11,13 +13,14 @@ import Error from './error';
 import Label from './tag_detail_label';
 import Loader from './loader';
 
+/**
+ * Displays a specific tag object and all relevant
+ * information related to it. This view also includes
+ * a "family tree" of the child components.
+ * @class TagDetail
+ * @extends {Component}
+ */
 class TagDetail extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
 
   componentWillMount() {
     const { tags, fetchTags, match } = this.props;
@@ -33,16 +36,6 @@ class TagDetail extends Component {
     }
   }
 
-  parseCousins() {
-    return this.props.tag.ancestors.reduce((cousins, ancestor) => {
-      return cousins.concat(ancestor.children);
-    }, [])
-    .reduce((cousins, cousin) => (
-      cousins.indexOf(cousin) > -1 ? cousins : cousins.concat(cousin)
-    ), []);
-  }
-
-
   render() {
     const { notFound, tags, match } = this.props;
     if (tags === 404) {
@@ -53,7 +46,7 @@ class TagDetail extends Component {
       return <Loader size={150} minHeight={500} />;
     }
     const { name, exdesc, creation_date, creator, descendants,
-      ancestors, change_date, changer, point_id } = this.props.activeTag;
+      change_date, changer, point_id } = this.props.activeTag;
     return (
       <div className="tag_detail__container" id="tagdetail" >
         <Link to={`/${match.params.scanId}/`}>
@@ -85,14 +78,38 @@ class TagDetail extends Component {
               : undefined}
           </div>
         </section>
-        {/*<section className="tag_detail__ancestors">
-          {ancestors.length > 0 ? <h3>Tag Ancestors:</h3> : <h3>No Ancestors Found</h3>}
-          {ancestors.length > 0 ? <Influence items={this.props.influence} /> : undefined}
-        </section>*/}
       </div>
     );
   }
 }
+
+TagDetail.defaultProps = {
+  activeTag: undefined,
+  fetchTags: undefined,
+  match: undefined,
+  notFound: undefined,
+  tags: [],
+  tag: undefined,
+};
+
+TagDetail.propTypes = {
+  activeTag: PropTypes.shape({
+    name: PropTypes.string,
+    exdesc: PropTypes.string,
+    creation_date: PropTypes.string,
+    creator: PropTypes.string,
+    descendants: PropTypes.array,
+    change_date: PropTypes.string,
+    changer: PropTypes.string,
+    point_id: PropTypes.number,
+  }),
+  notFound: PropTypes.bool,
+  tags: PropTypes.arrayOf(PropTypes.object),
+  match: PropTypes.shape({
+    params: PropTypes.object,
+  }),
+  fetchTags: PropTypes.func,
+};
 
 function mapStateToProps(state, ownProps) {
   const { scanId, tagId } = ownProps.match.params;
@@ -119,5 +136,5 @@ function mapStateToProps(state, ownProps) {
 }
 
 export default withRouter(connect(mapStateToProps, {
-  fetchTags,
+  fetchTags: getTags,
 })(TagDetail));

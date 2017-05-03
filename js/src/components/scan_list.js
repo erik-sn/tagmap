@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import { fetchScans, fetchTags, toggleCreateOdbc,
@@ -8,6 +9,12 @@ import { fetchScans, fetchTags, toggleCreateOdbc,
 import { API } from '../actions/constants';
 import ScanItem from './scan_item';
 
+/**
+ * Component that handles displaying and operating
+ * on ScanEvent objects
+ * @class ScanList
+ * @extends {Component}
+ */
 class ScanList extends Component {
 
   constructor(props) {
@@ -22,6 +29,9 @@ class ScanList extends Component {
   }
 
   componentWillMount() {
+    // if no activeScan is set on moutn check local storage
+    // and open the user's previously opened scan and set
+    // it as active
     if (!this.props.activeScan) {
       const lastSeenScanId = JSON.parse(localStorage.getItem('activeScan'));
       if (lastSeenScanId) {
@@ -30,17 +40,27 @@ class ScanList extends Component {
     }
   }
 
+  /**
+   * given a scan ID set it as active and update the
+   * browser URL to navigate to it
+   * @param {number} scanId - id/pk of the selected scan event
+   */
   handleSetActiveScan(scanId) {
     localStorage.setItem('activeScan', JSON.stringify(scanId));
     this.props.history.push(`/${scanId}/`);
   }
 
+  /**
+   * stop the workflow for deleting a ScanEvent
+   */
   handleStopDeleteProcess() {
-    this.setState({
-      confirmDelete: false,
-    });
+    this.setState({ confirmDelete: false });
   }
 
+  /**
+   * delete the selected ScanEvent
+   * @memberof ScanList
+   */
   handleDelete() {
     const { activeScan } = this.props;
     const { confirmDelete } = this.state;
@@ -122,6 +142,22 @@ class ScanList extends Component {
     );
   }
 }
+
+ScanList.defaultProps = {
+  activeScan: undefined,
+  scans: [],
+  fetchScans: undefined,
+  history: undefined,
+};
+
+ScanList.propTypes = {
+  activeScan: PropTypes.number,
+  scans: PropTypes.arrayOf(PropTypes.object),
+  fetchScans: PropTypes.func,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
+};
 
 function mapStateToProps(state) {
   return {

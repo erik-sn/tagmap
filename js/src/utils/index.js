@@ -1,9 +1,11 @@
 
+
 const tagRegex = /'(.*?)'/g;
 
 function parseEquationChildren(equation) {
   let matches = [];
   const output = [];
+  // eslint-disable-next-line no-cond-assign
   while (matches = tagRegex.exec(equation)) {
     output.push(matches[1]);
   }
@@ -19,6 +21,7 @@ function parseChildLeaves(children, tags) {
 function parseChildBranches(children, tags, ancestors) {
   return children.map(childName => tags.find(tag => tag.name === childName))
                  .filter(tag => tag)
+                  // eslint-disable-next-line no-use-before-define
                  .map(child => parseTagDescendants(child, tags, ancestors.concat(children)));
 }
 

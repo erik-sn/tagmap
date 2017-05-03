@@ -17,6 +17,9 @@ function parseDate(item, createkey, modifyKey) {
   };
 }
 
+/**
+ * Data reducer handles storage of scans, tags & databases
+ */
 export default (state = initialState, action) => {
   switch (action.type) {
     case ACTIONS.FETCH_SCANS:
@@ -50,6 +53,10 @@ export default (state = initialState, action) => {
         error: undefined,
         tags: {
           ...state.tags,
+          // store each individual scan and its tags as a separate key
+          // this way if the user goes back to a scan that has already
+          // been searched the data is already in storage and can be
+          // retrieved
           [action.meta.scanId]: action.payload.data.map(tag => (
             parseDate(tag, 'creation_date', 'change_date')),
           ),

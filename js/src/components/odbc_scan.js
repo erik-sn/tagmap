@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import { API } from '../actions/constants';
@@ -7,7 +8,13 @@ import { fetchDatabases, fetchScans, toggleScanOdbc } from '../actions';
 import Database from './database';
 import Loader from './loader';
 
-class Odbc extends Component {
+
+/**
+ * Handle modal to scan ODBC data sources
+ * @class OdbcScan
+ * @extends {Component}
+ */
+class OdbcScan extends Component {
 
   constructor(props) {
     super(props);
@@ -26,10 +33,20 @@ class Odbc extends Component {
     this.handleDatabaseClick = this.handleDatabaseClick.bind(this);
   }
 
+  /**
+   * When a database is clicked on from the table set
+   * it active in the state
+   * @param {object} database - database object that is being
+   * selected
+   */
   handleDatabaseClick(database) {
     this.setState({ activeDatabase: database });
   }
 
+  /**
+   * If an axios HTTP request is active cancel it and
+   * reset component input fields to default state
+   */
   cancelScan() {
     const httpRequest = this.state.httpRequest;
     if (httpRequest) {
@@ -43,10 +60,13 @@ class Odbc extends Component {
     }
   }
 
+  /**
+   * Delete the selected ID from the database
+   */
   handleDelete() {
     const id = this.state.activeDatabase.id;
     axios.delete(`${API}/api/databases/${id}/`)
-    .then((res) => {
+    .then(() => {
       this.setState({
         activeDatabase: undefined,
       }, () => this.props.fetchDatabases());
@@ -58,6 +78,15 @@ class Odbc extends Component {
     });
   }
 
+  /**
+   * start a "scan" on the selected database. This
+   * retrieves all tags associated with this database
+   * configuration and saves it in a ScanEvent object
+   * on the server side.
+   *
+   * After creating that object is returned to this method
+   * as a response in the axios .then
+   */
   handleScan() {
     const id = this.state.activeDatabase.id;
     const cancelToken = axios.CancelToken;
@@ -154,6 +183,20 @@ class Odbc extends Component {
   }
 }
 
+OdbcScan.defaultProps = {
+  toggleScanOdbc: undefined,
+  fetchScans: undefined,
+  fetchDatabases: undefined,
+  databases: [],
+};
+
+OdbcScan.propTypes = {
+  toggleScanOdbc: PropTypes.func,
+  fetchScans: PropTypes.func,
+  fetchDatabases: PropTypes.func,
+  databases: PropTypes.arrayOf(PropTypes.object),
+};
+
 function mapStateToProps(state) {
   return {
     databases: state.data.databases,
@@ -164,4 +207,4 @@ export default connect(mapStateToProps, {
   fetchDatabases,
   fetchScans,
   toggleScanOdbc,
-})(Odbc);
+})(OdbcScan);

@@ -1,5 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
+/**
+ * A row in the ScanList component. Each item
+ * represents a ScanEvent in the database
+ */
 const ScanItem = ({ scan, active, handleClick }) => {
   const onClick = () => handleClick(scan.id);
   const mainClass = `scan_item__container${active ? ' scan_item__active' : ''}`;
@@ -22,6 +27,24 @@ const ScanItem = ({ scan, active, handleClick }) => {
       </div>
     </div>
   );
+};
+
+ScanItem.defaultProps = {
+  scan: undefined,
+  active: false,
+  handleClick: undefined,
+};
+
+ScanItem.propTypes = {
+  scan: PropTypes.shape({
+    id: PropTypes.number,
+    tags: PropTypes.array,
+    file_name: PropTypes.string,
+    created: PropTypes.string,
+    database: PropTypes.object,
+  }),
+  active: PropTypes.bool,
+  handleClick: PropTypes.func,
 };
 
 export default ScanItem;

@@ -1,9 +1,9 @@
+/* eslint-disable no-confusing-arrow */
 import d3 from 'd3';
 
-
 function position() {
-  this.style('left', d => `${d.x  }px`)
-      .style('top', d => `${d.y  }px`)
+  this.style('left', d => `${d.x}px`)
+      .style('top', d => `${d.y}px`)
       .style('width', d => `${Math.max(0, d.dx - 1)}px`)
       .style('height', d => `${Math.max(0, d.dy - 1)}px`);
 }
@@ -18,7 +18,7 @@ function renderTreeMap(node, tree) {
   const treemap = d3.layout.treemap()
       .size([width, height])
       .sticky(true)
-      .value((d) => { return d.size; });
+      .value(d => d.size);
 
   div.datum(tree).selectAll('.node')
      .data(treemap.nodes)
@@ -26,14 +26,11 @@ function renderTreeMap(node, tree) {
      .append('div')
      .attr('class', 'tree_node')
      .call(position)
-     .style('background-color', (d) => {
-       return d.name === 'tree' ? '#fff' : color(d.name); 
-     })
+     .style('background-color', d => d.name === 'tree' ? '#fff' : color(d.name))
      .append('div')
-     .style('font-size', (d) => {
+     .style('font-size', d =>
        // compute font size based on sqrt(area)
-       return `${Math.max(20, 0.18 * Math.sqrt(d.area))}px`;
-     })
+        `${Math.max(20, 0.18 * Math.sqrt(d.area))}px`)
      .text(d => d.children ? null : d.name);
 }
 

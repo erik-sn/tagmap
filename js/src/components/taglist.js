@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import FilterTable from 'filter-table';
 
-import { fetchTags } from '../actions';
+import { fetchTags as getTags } from '../actions';
 import Error from './error';
 import Sidebar from './sidebar';
 import Loader from './loader';
 
+// filter-table configuration
 const config = [
   { key: 'name', header: 'Name', width: '25%' },
   { key: 'exdesc', header: 'Equation', width: '75%' },
 ];
 
-
+/**
+ * A sortable/filterable list of tags for whichever
+ * scan event is selected
+ * @class Taglist
+ * @extends {Component}
+ */
 class Taglist extends Component {
 
   constructor(props) {
@@ -38,13 +45,6 @@ class Taglist extends Component {
     const { scanId } = match.params;
     if (scanId && !tags && scanId !== prevProps.match.params.scanId) {
       fetchTags(match.params.scanId);
-    }
-
-    const table = document.querySelector('.filter_table__body');
-    if (table) {
-      table.addEventListener('scroll', () => {
-
-      });
     }
   }
 
@@ -105,6 +105,21 @@ class Taglist extends Component {
   }
 }
 
+Taglist.defaultProps = {
+  tags: [],
+};
+
+Taglist.propTypes = {
+  fetchTags: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({ scanId: PropTypes.string }),
+  }).isRequired,
+  tags: PropTypes.arrayOf(PropTypes.object),
+};
+
 function mapStateToProps(state, ownProps) {
   const scanId = ownProps.match.params.scanId;
   return {
@@ -113,5 +128,5 @@ function mapStateToProps(state, ownProps) {
 }
 
 export default connect(mapStateToProps, {
-  fetchTags,
+  fetchTags: getTags,
 })(Taglist);

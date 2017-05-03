@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 
 import { API } from '../actions/constants';
@@ -8,32 +9,49 @@ import { fetchScans, toggleFileUploader } from '../actions';
 
 import Loader from './loader';
 
-class Uploader extends Component {
+function handleFileButtonClick(event) {
+  event.currentTarget.value = null; // eslint-disable-line no-param-reassign
+}
 
-  defaultState = {
-    uploadedFile: undefined,
-    error: undefined,
-    invalid: undefined,
-    count: undefined,
-    uploading: false,
-    httpRequest: undefined,
-  }
+/**
+ * Modal component that handles uploading PI database
+ * file scans to the API
+ * @class Uploader
+ * @extends {Component}
+ */
+class Uploader extends Component {
 
   constructor(props) {
     super(props);
+    this.defaultState = {
+      uploadedFile: undefined,
+      error: undefined,
+      invalid: undefined,
+      count: undefined,
+      uploading: false,
+      httpRequest: undefined,
+    };
     this.state = this.defaultState;
 
     this.handleDrop = this.handleDrop.bind(this);
     this.handleFileSelect = this.handleFileSelect.bind(this);
-    this.handleFileButtonClick = this.handleFileButtonClick.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  /**
+   * set state back to default
+   */
   resetState() {
     this.setState(this.defaultState);
   }
 
+  /**
+   * verify that the uploaded file has the correct file
+   * extension
+   * @param {File} uploadedFile - File object
+   * @memberof Uploader
+   */
   validateFile(uploadedFile) {
     const extension = uploadedFile.name.split('.').pop();
     if (extension === 'xlsx') {
@@ -41,24 +59,34 @@ class Uploader extends Component {
     } else {
       this.setState({
         uploadedFile: undefined,
-        error: 'Invalid file - xlsx file required'
+        error: 'Invalid file - xlsx file required',
       });
     }
   }
 
+  /**
+   * receive files from the uploader and use the first
+   * in the list
+   * @param {File[]} acceptedFiles - Array of file objects
+   */
   handleDrop(acceptedFiles) {
     this.validateFile(acceptedFiles[0]);
   }
 
-  handleFileButtonClick(event) {
-    event.currentTarget.value = null;
-  }
-
+  /**
+   * handle change on the file select input
+   * @param {any} event - File select event
+   */
   handleFileSelect(event) {
     event.preventDefault();
     this.validateFile(event.currentTarget.files[0]);
   }
 
+  /**
+   * if we have started a HTTP request through
+   * axios cancel it - otherwise set state back
+   * to default
+   */
   handleCancel() {
     const { httpRequest } = this.state;
     if (httpRequest) {
@@ -71,6 +99,9 @@ class Uploader extends Component {
     }
   }
 
+  /**
+   * submit the selected file to the API for submission
+   */
   handleSubmit() {
     const data = new FormData();
     const file = this.state.uploadedFile;
@@ -95,9 +126,8 @@ class Uploader extends Component {
           return;
         }
         let error = '';
-        for (let key in err.response.data) {
-          error = err.response.data[key];
-        }
+        const keys = Object.keys(err.response.data);
+        error = err.response.data[keys[0]];
         this.setState({
           error,
           count: undefined,
@@ -108,13 +138,16 @@ class Uploader extends Component {
       });
   }
 
+  /**
+   * If a file is uploaded then return its name,
+   * otherwise return a prompt
+   */
   chooseMessage() {
-    const { uploadedFile, error } = this.state;
+    const { uploadedFile } = this.state;
     if (uploadedFile) {
       return uploadedFile.name;
-    } else {
-      return 'Drop tag xlsx file here';
     }
+    return 'Drop tag xlsx file here';
   }
 
   render() {
@@ -144,7 +177,7 @@ class Uploader extends Component {
               <img src={`${API}/static/api/check.svg`} alt="submit" />
               Submit
             </button> : undefined}
-          {!uploading && !uploadedFile ? 
+          {!uploading && !uploadedFile ?
             <div className="inputWrapper uploader__button" style={{ width: '110px' }}>
               <img src={`${API}/static/api/upload.svg`} alt="upload file" />
               Choose File
@@ -152,12 +185,12 @@ class Uploader extends Component {
                 className="fileInput"
                 name="tagfile"
                 type="file"
-                onClick={this.handleFileButtonClick}
+                onClick={handleFileButtonClick}
                 onChange={this.handleFileSelect}
               />
             </div>
             : undefined}
-          {uploadedFile ? 
+          {uploadedFile ?
             <button
               className="uploader__button"
               onClick={this.handleCancel}
@@ -170,7 +203,7 @@ class Uploader extends Component {
             className="uploader__button"
             onClick={this.props.toggleFileUploader}
           >
-            <img src={`${API}/static/api/cancel.svg`} alt="close" /> 
+            <img src={`${API}/static/api/cancel.svg`} alt="close" />
             Close
           </button>
           : undefined}
@@ -179,6 +212,11 @@ class Uploader extends Component {
     );
   }
 }
+
+Uploader.propTypes = {
+  toggleFileUploader: PropTypes.func.isRequired,
+  fetchScans: PropTypes.func.isRequired,
+};
 
 export default connect(null, {
   toggleFileUploader,

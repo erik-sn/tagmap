@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 import { API } from '../actions/constants';
 import { fetchDatabases, toggleCreateOdbc } from '../actions';
 import Loader from './loader';
 
-class Odbc extends Component {
+/**
+ * Modal for creating an ODBC database configuration
+ * @class Odbc
+ * @extends {Component}
+ */
+class CreateOdbc extends Component {
 
   constructor(props) {
     super(props);
@@ -24,6 +30,10 @@ class Odbc extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  /**
+   * handle all input element value changes
+   * @param {event} { currentTarget }
+   */
   handleChange({ currentTarget }) {
     this.setState({ [currentTarget.name]: currentTarget.value });
   }
@@ -118,7 +128,17 @@ class Odbc extends Component {
   }
 }
 
+CreateOdbc.defaultProps = {
+  toggleCreateOdbc: undefined,
+  fetchDatabases: undefined,
+};
+
+CreateOdbc.propTypes = {
+  toggleCreateOdbc: PropTypes.func,
+  fetchDatabases: PropTypes.func,
+};
+
 export default connect(null, {
   fetchDatabases,
   toggleCreateOdbc,
-})(Odbc);
+})(CreateOdbc);

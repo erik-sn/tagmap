@@ -1,5 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
+/**
+ * Contains representation of a database object in the
+ * ODBC Scanning menu
+ */
 const Database = ({ database, active, handleClick }) => {
   const { name, server, data_source } = database;
   const mainClass = `database__container${active ? ' database__active' : ''}`;
@@ -21,6 +26,22 @@ const Database = ({ database, active, handleClick }) => {
       </div>
     </div>
   );
+};
+
+Database.defaultProps = {
+  database: { name: '', server: '', data_source: '' },
+  active: false,
+  handleClick: () => undefined,
+};
+
+Database.propTypes = {
+  database: PropTypes.shape({
+    name: PropTypes.string,
+    server: PropTypes.string,
+    data_source: PropTypes.string,
+  }),
+  active: PropTypes.bool,
+  handleClick: PropTypes.func,
 };
 
 export default Database;

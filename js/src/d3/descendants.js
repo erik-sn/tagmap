@@ -1,5 +1,6 @@
+/* eslint-disable no-use-before-define, no-param-reassign, no-underscore-dangle */
+/* eslint-disable no-confusing-arrow, no-plusplus */
 import d3 from 'd3';
-
 
 function getTreeDepth(treeData) {
   let depth = 0;
@@ -23,9 +24,8 @@ function getTreeHeight(treeData) {
 }
 
 export default function (svgDomNode, treeData) {
-
-  let treeWidth = getTreeDepth(treeData[0]);
-  let treeHeight = getTreeHeight(treeData);
+  const treeWidth = getTreeDepth(treeData[0]);
+  const treeHeight = getTreeHeight(treeData);
 
   // ************** Generate the tree diagram*****************
   const root = treeData[0];
@@ -66,7 +66,7 @@ export default function (svgDomNode, treeData) {
           maxDepth = n.depth;
         }
       });
-      const leaves = nodes.filter((n) => n.depth === maxDepth).length;
+      const leaves = nodes.filter(n => n.depth === maxDepth).length;
 
       const newWidth = maxDepth * 350;
       const newHeight = (leaves * 25);
@@ -87,7 +87,7 @@ export default function (svgDomNode, treeData) {
     // Enter any new nodes at the parent's previous position.
     const nodeEnter = node.enter().append('g')
       .attr('class', 'node')
-      .attr('transform', d => `translate(${source.y0},${source.x0})`)
+      .attr('transform', () => `translate(${source.y0},${source.x0})`)
       .on('click', click);
 
     nodeEnter.append('circle')
@@ -116,7 +116,7 @@ export default function (svgDomNode, treeData) {
     // Transition exiting nodes to the parent's new position.
     const nodeExit = node.exit().transition()
       .duration(duration)
-      .attr('transform', d => `translate(${source.y},${source.x})`)
+      .attr('transform', () => `translate(${source.y},${source.x})`)
       .remove();
 
     nodeExit.select('circle')
@@ -132,7 +132,7 @@ export default function (svgDomNode, treeData) {
     // Enter any new links at the parent's previous position.
     link.enter().insert('path', 'g')
       .attr('class', 'link')
-      .attr('d', (d) => {
+      .attr('d', () => {
         const o = { x: source.x0, y: source.y0 };
         return diagonal({ source: o, target: o });
       });
@@ -145,7 +145,7 @@ export default function (svgDomNode, treeData) {
     // Transition exiting nodes to the parent's new position.
     link.exit().transition()
       .duration(duration)
-      .attr('d', (d) => {
+      .attr('d', () => {
         const o = { x: source.x, y: source.y };
         return diagonal({ source: o, target: o });
       })
