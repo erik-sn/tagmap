@@ -2,6 +2,14 @@
 
 const tagRegex = /'(.*?)'/g;
 
+/**
+ * use the tagRegex to retrieve all quoted strings in
+ * an input equation string. Return these strings in an
+ * array
+ *
+ * @param {string} equation - PI ODBC equation
+ * @returns string[] - list of children
+ */
 function parseEquationChildren(equation) {
   let matches = [];
   const output = [];
@@ -12,11 +20,27 @@ function parseEquationChildren(equation) {
   return output;
 }
 
+/**
+ * Return all "leaves" of a tag. Leaves are tags with no descendants
+ *
+ * @param {Tag[]} children - list of tags we are analyzing
+ * @param {Tag[]} tags - all tags in the scan event group
+ * @returns Tag[] tags with their descendants filled out
+ */
 function parseChildLeaves(children, tags) {
   return children.filter(childName => !tags.find(tag => tag.name === childName))
                  .map(leaf => ({ name: leaf, descendants: [] }));
 }
 
+/**
+ * Find all direct descendants that have descendants of their own
+ *
+ * @param {Tag[]} children - list of tags we are analyzing
+ * @param {Tag[]} tags - all tags in the scan event group
+ * @param {string[]} ancestors - any ancestors that have been discovered so far
+ * in this family tree
+ * @returns Tag[] tags with their descendants filled out
+ */
 function parseChildBranches(children, tags, ancestors) {
   return children.map(childName => tags.find(tag => tag.name === childName))
                  .filter(tag => tag)
