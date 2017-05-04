@@ -106,7 +106,7 @@ class Taglist extends Component {
 }
 
 Taglist.defaultProps = {
-  tags: [],
+  tags: undefined,
 };
 
 Taglist.propTypes = {

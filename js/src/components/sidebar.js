@@ -19,7 +19,7 @@ Sidebar.defaultProps = {
 };
 
 Sidebar.propTypes = {
-  activeScan: PropTypes.number,
+  activeScan: PropTypes.string,
 };
 
 export default Sidebar;

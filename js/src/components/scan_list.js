@@ -151,7 +151,7 @@ ScanList.defaultProps = {
 };
 
 ScanList.propTypes = {
-  activeScan: PropTypes.number,
+  activeScan: PropTypes.string,
   scans: PropTypes.arrayOf(PropTypes.object),
   fetchScans: PropTypes.func,
   history: PropTypes.shape({

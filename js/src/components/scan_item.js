@@ -38,7 +38,7 @@ ScanItem.defaultProps = {
 ScanItem.propTypes = {
   scan: PropTypes.shape({
     id: PropTypes.number,
-    tags: PropTypes.array,
+    tags: PropTypes.number,
     file_name: PropTypes.string,
     created: PropTypes.string,
     database: PropTypes.object,
